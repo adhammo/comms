@@ -1,0 +1,87 @@
+.show {
+  padding: 0.25rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.show:hover,
+.show:active {
+  background-color: var(--background-highlight);
+}
+
+.show img {
+  filter: var(--foreground-filter);
+}
+
+.show.active img {
+  filter: var(--primary-filter);
+}
+
+.popup {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.25rem);
+  transform: translate(-50%, 0);
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+
+.popup.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.popup::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%);
+  border: 4px solid transparent;
+  border-bottom: 5px solid var(--foreground-variant);
+}
+
+.buttons {
+  background-color: var(--background-variant);
+  border: solid 1px var(--foreground-variant);
+  box-shadow: 0 0 2px var(--foreground-variant);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.option {
+  width: 20px;
+  height: 20px;
+  padding: 0.5rem;
+  border: none;
+  border-bottom: solid 1px var(--foreground-variant);
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: content-box;
+}
+
+.option:last-child {
+  border-bottom: none;
+}
+
+:not(.hide) .option:hover,
+:not(.hide) .option:active {
+  background-color: var(--background);
+}
+
+.option img {
+  filter: var(--foreground-filter);
+}
+
+:not(.hide) .option.active img {
+  filter: var(--primary-filter);
+}

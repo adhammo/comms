@@ -1,0 +1,411 @@
+.tiptap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: solid 2px var(--foreground-variant);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.menu,
+.editor {
+  width: 100%;
+}
+
+.menu {
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-variant);
+  border-bottom: solid 1px var(--foreground-variant);
+}
+
+.menu > * {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.menu > :first-child {
+  margin-left: 0;
+}
+
+.float {
+  padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--background-variant);
+  border-left: solid 1px var(--gray);
+}
+
+.menuButton {
+  padding: 0.25rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.menuButton:hover,
+.menuButton:active {
+  background-color: var(--background-highlight);
+}
+
+.menuButton img {
+  filter: var(--foreground-filter);
+}
+
+.menuButton.active img {
+  filter: var(--primary-filter);
+}
+
+.headings,
+.alignment,
+.link {
+  position: relative;
+}
+
+.editor {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.content {
+  min-height: 100%;
+  padding: 1rem;
+  outline: none;
+  white-space: pre-wrap;
+}
+
+/* .content > * + .content * {
+  margin-top: 0.75em;
+}
+
+.content ul,
+.content ol {
+  padding: 0 1rem;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  line-height: 1.1;
+}
+
+.content code {
+  background-color: rgba(#616161, 0.1);
+  color: #616161;
+}
+
+.content pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.content pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(#0d0d0d, 0.1);
+}
+
+.content hr {
+  border: none;
+  border-top: 2px solid rgba(#0d0d0d, 0.1);
+  margin: 2rem 0;
+} */
+
+.content h6,
+.content h5,
+.content h4,
+.content h3,
+.content h2,
+.content h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.content h1 {
+  font-size: calc(1.375rem + 1.5vw);
+}
+
+@media (min-width: 1200px) {
+  .content h1 {
+    font-size: 2.5rem;
+  }
+}
+
+.content h2 {
+  font-size: calc(1.325rem + 0.9vw);
+}
+
+@media (min-width: 1200px) {
+  .content h2 {
+    font-size: 2rem;
+  }
+}
+
+.content h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
+@media (min-width: 1200px) {
+  .content h3 {
+    font-size: 1.75rem;
+  }
+}
+
+.content h4 {
+  font-size: calc(1.275rem + 0.3vw);
+}
+@media (min-width: 1200px) {
+  .content h4 {
+    font-size: 1.5rem;
+  }
+}
+
+.content h5 {
+  font-size: 1.25rem;
+}
+
+.content h6 {
+  font-size: 1rem;
+}
+
+.content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.content abbr[title] {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+  cursor: help;
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+}
+
+.content address {
+  margin-bottom: 1rem;
+  font-style: normal;
+  line-height: inherit;
+}
+
+.content ol[dir='ltr'],
+.content ul[dir='ltr'] {
+  padding-left: 2rem;
+}
+
+.content ol[dir='rtl'],
+.content ul[dir='rtl'] {
+  padding-right: 2rem;
+}
+
+.content ol *,
+.content ul * {
+  direction: inherit !important;
+  text-align: inherit !important;
+}
+
+.content ul {
+  list-style: initial;
+}
+
+.content ol,
+.content ul,
+.content dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.content ol ol,
+.content ul ul,
+.content ol ul,
+.content ul ol {
+  margin-bottom: 0;
+}
+
+.content li * {
+  margin: 0;
+  padding: 0;
+}
+
+.content dt {
+  font-weight: 700;
+}
+
+.content dd {
+  margin-bottom: 0.5rem;
+  margin-left: 0;
+}
+
+.content blockquote {
+  margin: 0 0 1rem;
+}
+
+.content b,
+.content strong {
+  font-weight: bolder;
+}
+
+.content small {
+  font-size: 0.875em;
+}
+
+.content mark {
+  padding: 0.1875em;
+  background-color: var(--bs-highlight-bg);
+}
+
+.content sub,
+.content sup {
+  position: relative;
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+.content sub {
+  bottom: -0.25em;
+}
+
+.content sup {
+  top: -0.5em;
+}
+
+.content a {
+  color: rgba(var(--bs-link-color-rgb), 1);
+  text-decoration: underline;
+}
+.content a:hover {
+  --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
+}
+
+.content a:not([href]):not([class]),
+.content a:not([href]):not([class]):hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.content pre,
+.content code,
+.content kbd,
+.content samp {
+  font-family: var(--bs-font-monospace);
+  font-size: 1em;
+}
+
+.content pre {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  overflow: auto;
+  font-size: 0.875em;
+}
+.content pre code {
+  font-size: inherit;
+  color: inherit;
+  word-break: normal;
+}
+
+.content code {
+  font-size: 0.875em;
+  color: var(--bs-code-color);
+  word-wrap: break-word;
+}
+
+.content a > code {
+  color: inherit;
+}
+
+.content kbd {
+  padding: 0.1875rem 0.375rem;
+  font-size: 0.875em;
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
+  border-radius: 0.25rem;
+}
+.content kbd kbd {
+  padding: 0;
+  font-size: 1em;
+}
+
+.content figure {
+  margin: 0 0 1rem;
+}
+
+.content img,
+.content svg {
+  vertical-align: middle;
+}
+
+.content table {
+  caption-side: bottom;
+  border-collapse: collapse;
+}
+
+.content caption {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--bs-secondary-color);
+  text-align: left;
+}
+
+.content th {
+  text-align: inherit;
+  text-align: -webkit-match-parent;
+}
+
+.content thead,
+.content tbody,
+.content tfoot,
+.content tr,
+.content td,
+.content th {
+  border-color: inherit;
+  border-style: solid;
+  border-width: 0;
+}
+
+/* .content p[dir="rtl"],
+.content h1[dir="rtl"],
+.content h2[dir="rtl"],
+.content h3[dir="rtl"],
+.content h4[dir="rtl"],
+.content h5[dir="rtl"],
+.content h6[dir="rtl"] {
+  text-align: right;
+}
+
+.content p[dir="ltr"],
+.content h1[dir="ltr"],
+.content h2[dir="ltr"],
+.content h3[dir="ltr"],
+.content h4[dir="ltr"],
+.content h5[dir="ltr"],
+.content h6[dir="ltr"] {
+  text-align: left;
+} */
