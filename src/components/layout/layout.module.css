@@ -1,5 +1,6 @@
 .main,
-.header {
+.header,
+.footer {
   width: 100%;
   max-width: 1240px;
 }
@@ -71,11 +72,12 @@
   border-radius: 0.2rem;
   background-color: transparent;
   box-shadow: inset 0 0 0 1px var(--foreground);
-  transition: box-shadow 0.2s, color 0.2s;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
 }
 
-.author:hover {
-  border-width: 2px;
+.author:hover,
+.author:active {
   box-shadow: inset 0 0 0 2px var(--foreground);
 }
 
@@ -98,8 +100,13 @@
 }
 
 .main {
-  height: 100%;
-  padding: 0 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.footer {
+  height: 1rem;
 }
 
 /* Mobile */

@@ -50,7 +50,7 @@ export const Select = ({ header, options, onShow }: SelectProps) => {
   const [show, setShow] = useState(false)
 
   return (
-    <>
+    <div className={styles.container}>
       <button
         ref={showRef}
         onClick={() => {
@@ -98,7 +98,7 @@ export const Select = ({ header, options, onShow }: SelectProps) => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

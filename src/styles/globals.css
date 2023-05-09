@@ -1,4 +1,11 @@
 :root {
+  --light: #f8f9fa;
+  --dark: #212529;
+  --success: #198754;
+  --info: #0dcaf0;
+  --warning: #ffc107;
+  --danger: #dc3545;
+
   --foreground: #212529ff;
   --foreground-variant: #969b9fff;
   --foreground-filter: invert(11%) sepia(10%) saturate(762%) hue-rotate(169deg) brightness(91%) contrast(90%);
@@ -6,11 +13,12 @@
   --background-highlight: #d8d8d8ff;
   --background-variant: #eff1f3ff;
   --shadow: #21252938;
-  --gray: #ced4daff;
+  --gray: #a5a9adff;
   --gray-variant: #60676eff;
 
   --primary: #00a6fbff;
   --primary-variant: #0582caff;
+  --primary-highlight: #297398;
   --primary-filter: invert(45%) sepia(98%) saturate(2031%) hue-rotate(170deg) brightness(98%) contrast(107%);
   --accent: #ffd60aff;
   --accent-variant: #ffc300ff;
@@ -36,7 +44,7 @@
     --background-highlight: #3b4046ff;
     --background-variant: #292e34ff;
     --shadow: #f8f9fa34;
-    --gray: #495057ff;
+    --gray: #616971ff;
     --gray-variant: #606971ff;
 
     --bs-body-color: #adb5bd;
@@ -186,7 +194,7 @@ body {
   height: 100vh;
   padding: 0 1rem;
   display: grid;
-  grid-template-rows: 5rem calc(100vh - 5rem);
+  grid-template-rows: 5rem 1fr 1rem;
   justify-items: center;
 }
 

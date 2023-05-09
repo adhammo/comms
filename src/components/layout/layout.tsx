@@ -23,7 +23,7 @@ const opensans = Open_Sans({
   subsets: ['latin'],
 })
 
-const Layout = ({ children }: LayoutProps) => (
+export const Layout = ({ children }: LayoutProps) => (
   <>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,7 +57,8 @@ const Layout = ({ children }: LayoutProps) => (
       </div>
     </header>
     <main className={styles.main}>{children}</main>
-    {/* <Footer /> */}
+    <footer className={styles.footer}>
+    </footer>
   </>
 )
 

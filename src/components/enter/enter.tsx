@@ -52,7 +52,7 @@ export const Enter = ({ header, placeholder, initalValue, actions, onShow }: Ent
   const [value, setValue] = useState(initalValue)
 
   return (
-    <>
+    <div className={styles.container}>
       <button
         ref={showRef}
         onClick={() => {
@@ -107,7 +107,7 @@ export const Enter = ({ header, placeholder, initalValue, actions, onShow }: Ent
           ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

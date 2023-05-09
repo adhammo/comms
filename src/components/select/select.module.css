@@ -1,3 +1,7 @@
+.container {
+  position: relative;
+}
+
 .show {
   padding: 0.25rem;
   border: none;
@@ -25,7 +29,7 @@
 .popup {
   position: absolute;
   left: 50%;
-  top: calc(100% + 0.25rem);
+  top: calc(100% + 0.3rem);
   transform: translate(-50%, 0);
   opacity: 1;
   transition: opacity 0.1s;

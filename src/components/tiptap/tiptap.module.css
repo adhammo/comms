@@ -1,7 +1,7 @@
 .tiptap {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -63,12 +63,6 @@
 
 .menuButton.active img {
   filter: var(--primary-filter);
-}
-
-.headings,
-.alignment,
-.link {
-  position: relative;
 }
 
 .editor {

@@ -1,0 +1,147 @@
+.container {
+  width: 100%;
+  max-width: 20rem;
+  padding: 2rem;
+  box-sizing: content-box;
+  background-color: var(--background-variant);
+  /* border: solid 1px var(--foreground-variant); */
+  box-shadow: 0 2px 2px var(--foreground-variant);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.error {
+  display: none;
+  text-align: center;
+  margin: 0 0 1rem -2rem;
+  padding: 0.25rem 0;
+  width: calc(100% + 4rem);
+  color: var(--light);
+  background-color: var(--danger);
+}
+
+.error.active {
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form > * {
+  margin-bottom: 1rem;
+}
+
+.form > :last-child {
+  margin-bottom: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.group > * {
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+.group > :last-child {
+  padding-right: 0;
+}
+
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 0 0 1px var(--gray);
+  color: var(--foreground);
+  background-color: var(--background);
+  transition: box-shadow 0.2s;
+}
+
+.field input::placeholder {
+  color: var(--gray);
+}
+
+.field input:hover {
+  box-shadow: inset 0 0 0 1px var(--primary-variant);
+}
+
+.field input:active,
+.field input:focus {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.submitCotainer {
+  margin-top: 0.5rem;
+  width: 100%;
+  height: 3rem;
+  box-sizing: border-box;
+  padding: 0 0 4px 0;
+  transition: padding 0.1s;
+}
+.submitCotainer:hover,
+.submitCotainer:active {
+  padding: 2px 0 2px 0;
+}
+
+.submit {
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.2rem;
+  color: var(--foreground);
+  background-color: var(--primary);
+  box-shadow: 0 4px var(--primary-highlight);
+  cursor: pointer;
+  transition: box-shadow 0.1s;
+}
+
+.submitCotainer:hover .submit,
+.submitCotainer:active .submit {
+  box-shadow: 0 2px var(--primary-variant);
+}
+
+.link {
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+  text-decoration: underline;
+  color: var(--foreground);
+}
+
+.link:hover,
+.link:active {
+  color: var(--primary);
+}

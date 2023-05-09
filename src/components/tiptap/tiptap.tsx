@@ -4,14 +4,16 @@ import { FloatingMenu, EditorContent, useEditor, EditorContentProps } from '@tip
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import Typography from '@tiptap/extension-typography'
+import Link from '@tiptap/extension-link'
 import TextAlign from './TextAlign'
 import TextDirection from './TextDirection'
-import Link from '@tiptap/extension-link'
+import TipImage from './Image'
 import Select from '@/components/select/select'
 import Enter from '../enter/enter'
 import styles from './tiptap.module.css'
 
 import classNames from 'classnames'
+import { createPost } from '@/lib/posts'
 
 const MenuBar = ({ editor }: EditorContentProps) => {
   if (!editor) {
@@ -29,8 +31,6 @@ const MenuBar = ({ editor }: EditorContentProps) => {
 
   const [directionSrc, directionAlt] = (editor.isActive({ textDirection: 'ltr' }) && ['ltr', 'Left to Right']) ||
     (editor.isActive({ textDirection: 'rtl' }) && ['rtl', 'Right to Left']) || ['ltr', 'Left to Right']
-
-  const [linkSrc, linkAlt] = (!editor.isActive('link') && ['link', 'Set Link']) || ['unlink', 'Remove Link']
 
   return (
     <div className={styles.menu}>
@@ -182,18 +182,7 @@ const MenuBar = ({ editor }: EditorContentProps) => {
           <Image src="/icons/editor/bullet_list.svg" alt="Toggle Bullet List" width={20} height={20} />
         </button>
       </div>
-      <div className={styles.link}>
-        {/* <button
-          onClick={() => {
-            editor.chain().focus().extendMarkRange('link').toggleLink({ href: 'https://example.com', target: '_blank' }).run()
-          }}
-          className={classNames(styles.menuButton, {
-            [styles.active]: editor.isActive('link'),
-          })}
-          title={linkAlt}
-        >
-          <Image src={`/icons/editor/${linkSrc}.svg`} alt={linkAlt} width={20} height={20} />
-        </button> */}
+      <div className={styles.extra}>
         <Enter
           header={{ title: 'Link', iconSrc: `/icons/editor/link.svg` }}
           placeholder={'http[s]://'}
@@ -225,6 +214,42 @@ const MenuBar = ({ editor }: EditorContentProps) => {
                       )
                       if (!editor.state.selection.empty && value.match(regex))
                         editor.chain().focus().extendMarkRange('link').setLink({ href: value, target: '_blank' }).run()
+                      else editor.chain().focus()
+                    },
+                  },
+                ]
+          }
+          onShow={() => editor.chain().focus()}
+        />
+        <Enter
+          header={{ title: 'Image', iconSrc: `/icons/editor/image.svg` }}
+          placeholder={'http[s]://'}
+          initalValue={editor.getAttributes('image').src ?? ''}
+          actions={
+            editor.isActive('image')
+              ? [
+                  {
+                    title: 'Update',
+                    default: true,
+                    element: <Image src="/icons/editor/check.svg" alt="Check" width={18} height={18} />,
+                    callback: value => editor.chain().focus().setImage({ src: value }).run(),
+                  },
+                  {
+                    title: 'Remove',
+                    element: <Image src="/icons/editor/close.svg" alt="Close" width={18} height={18} />,
+                    callback: () => editor.chain().focus().clearNodes().run(),
+                  },
+                ]
+              : [
+                  {
+                    title: 'Download',
+                    default: true,
+                    element: <Image src="/icons/editor/check.svg" alt="Link" width={18} height={18} />,
+                    callback: value => {
+                      const regex = new RegExp(
+                        /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+                      )
+                      if (value.match(regex)) editor.chain().focus().setImage({ src: value }).run()
                       else editor.chain().focus()
                     },
                   },
@@ -315,7 +340,7 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
   )
 }
 
-const TipTap = () => {
+export const TipTap = () => {
   const editor = useEditor({
     autofocus: true,
     editable: true,
@@ -356,6 +381,7 @@ const TipTap = () => {
         openOnClick: false,
         linkOnPaste: true,
       }),
+      TipImage,
     ],
     content: `
       <h2>
@@ -389,12 +415,34 @@ const TipTap = () => {
     `,
   })
 
+  const [title, setTitle] = useState('')
+
+  if (!editor) {
+    return null
+  }
+
   return (
-    <div className={styles.tiptap}>
-      <MenuBar editor={editor} />
-      <FloatingMenuBar editor={editor} />
-      <EditorContent className={styles.editor} editor={editor} translate="no" />
-    </div>
+    <>
+      <input
+        style={{ marginBottom: '1rem' }}
+        placeholder="title"
+        onChange={e => setTitle(e.target.value)}
+        value={title}
+      ></input>
+      <button
+        style={{ marginBottom: '1rem' }}
+        onClick={() => {
+          createPost(title, JSON.stringify(editor.getJSON()))
+        }}
+      >
+        Submit
+      </button>
+      <div className={styles.tiptap}>
+        <MenuBar editor={editor} />
+        <FloatingMenuBar editor={editor} />
+        <EditorContent className={styles.editor} editor={editor} />
+      </div>
+    </>
   )
 }
 
