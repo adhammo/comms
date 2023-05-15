@@ -20,8 +20,8 @@ const MenuBar = ({ editor }: EditorContentProps) => {
     return null
   }
 
-  const [headingSrc, headingAlt] = (editor.isActive('heading', { level: 1 }) && ['h1', 'Heading']) ||
-    (editor.isActive('heading', { level: 2 }) && ['h2', 'SubHeading']) ||
+  const [headingSrc, headingAlt] = (editor.isActive('heading', { level: 2 }) && ['h1', 'Heading']) ||
+    (editor.isActive('heading', { level: 3 }) && ['h2', 'SubHeading']) ||
     (editor.isActive('paragraph') && ['paragraph', 'Paragraph']) || ['paragraph', 'Paragraph']
 
   const [alignmentSrc, alignmentAlt] = (editor.isActive({ textAlign: 'left' }) && ['align_left', 'Align Left']) ||
@@ -48,9 +48,9 @@ const MenuBar = ({ editor }: EditorContentProps) => {
               callback: () => {
                 const align = editor.state.selection.$anchor.parent.attrs.textAlign
                 const direction = editor.state.selection.$anchor.parent.attrs.textDirection
-                editor.chain().focus().setHeading({ level: 1 }).setTextDirection(direction).setTextAlign(align).run()
+                editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
               },
-              active: editor.isActive('heading', { level: 1 }),
+              active: editor.isActive('heading', { level: 2 }),
             },
             {
               title: 'SubHeading',
@@ -58,9 +58,9 @@ const MenuBar = ({ editor }: EditorContentProps) => {
               callback: () => {
                 const align = editor.state.selection.$anchor.parent.attrs.textAlign
                 const direction = editor.state.selection.$anchor.parent.attrs.textDirection
-                editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
+                editor.chain().focus().setHeading({ level: 3 }).setTextDirection(direction).setTextAlign(align).run()
               },
-              active: editor.isActive('heading', { level: 2 }),
+              active: editor.isActive('heading', { level: 3 }),
             },
             {
               title: 'Paragraph',
@@ -274,10 +274,10 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
           onClick={() => {
             const align = editor.state.selection.$anchor.parent.attrs.textAlign
             const direction = editor.state.selection.$anchor.parent.attrs.textDirection
-            editor.chain().focus().setHeading({ level: 1 }).setTextDirection(direction).setTextAlign(align).run()
+            editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
           }}
           className={classNames(styles.menuButton, {
-            [styles.active]: editor.isActive('heading', { level: 1 }),
+            [styles.active]: editor.isActive('heading', { level: 2 }),
           })}
           title="New Heading"
         >
@@ -287,10 +287,10 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
           onClick={() => {
             const align = editor.state.selection.$anchor.parent.attrs.textAlign
             const direction = editor.state.selection.$anchor.parent.attrs.textDirection
-            editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
+            editor.chain().focus().setHeading({ level: 3 }).setTextDirection(direction).setTextAlign(align).run()
           }}
           className={classNames(styles.menuButton, {
-            [styles.active]: editor.isActive('heading', { level: 2 }),
+            [styles.active]: editor.isActive('heading', { level: 3 }),
           })}
           title="New SubHeading"
         >
@@ -352,10 +352,9 @@ export const TipTap = () => {
       scrollMargin: 20,
     },
     extensions: [
-      // Color.configure({ types: [TextStyle.name, ListItem.name] }),
       StarterKit.configure({
         heading: {
-          levels: [1, 2],
+          levels: [2, 3],
         },
       }),
       Underline,
@@ -432,7 +431,8 @@ export const TipTap = () => {
       <button
         style={{ marginBottom: '1rem' }}
         onClick={() => {
-          createPost(title, JSON.stringify(editor.getJSON()))
+          console.log(JSON.stringify(editor.getJSON()))
+          // createPost(title, JSON.stringify(editor.getJSON()))
         }}
       >
         Submit

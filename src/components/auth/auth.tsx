@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import classNames from 'classnames'
-import { signIn, signUp } from '@/lib/auth'
 import styles from './auth.module.css'
 
 export declare type SignProps = {
@@ -11,6 +11,7 @@ export declare type SignProps = {
 
 const Signin = ({ setErrorMessage }: SignProps) => {
   const router = useRouter()
+  const supabase = useSupabaseClient()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -19,13 +20,15 @@ const Signin = ({ setErrorMessage }: SignProps) => {
     else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
       setErrorMessage('Please enter a valid email address.')
     else if (password === '') setErrorMessage('Please enter your password.')
-    else
-      signIn(email, password).then(value => {
-        if (value == null) setErrorMessage('Incorrect email or password.')
-        else {
-          setErrorMessage('')
-          router.push('/author')
-        }
+
+    supabase.auth
+      .signInWithPassword({
+        email,
+        password,
+      })
+      .then(({ error }) => {
+        if (error) setErrorMessage('Incorrect email or password.')
+        else router.push('/author')
       })
   }
 
@@ -82,8 +85,10 @@ const Signin = ({ setErrorMessage }: SignProps) => {
 
 const Signup = ({ setErrorMessage }: SignProps) => {
   const router = useRouter()
+  const supabase = useSupabaseClient()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPass, setConfirmPass] = useState('')
@@ -91,19 +96,32 @@ const Signup = ({ setErrorMessage }: SignProps) => {
   const submitForm = () => {
     if (firstName === '') setErrorMessage('Please enter your first name.')
     else if (lastName === '') setErrorMessage('Please enter your last name.')
+    else if (username === '') setErrorMessage('Please enter your username.')
+    else if (!/^[a-z0-9]+$/.test(username)) setErrorMessage('Username contains small letters and numbers.')
     else if (email === '') setErrorMessage('Please enter your email address.')
     else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
       setErrorMessage('Please enter a valid email address.')
     else if (password === '') setErrorMessage('Please enter your password.')
     else if (confirmPass === '') setErrorMessage('Please confirm your password.')
     else if (confirmPass !== password) setErrorMessage("Passwords don't match.")
-    else
-      signUp(email, password, firstName, lastName).then(value => {
-        if (value == null) setErrorMessage('An account exists with this email.')
-        else {
-          setErrorMessage('')
-          router.push('/signin')
-        }
+
+    supabase.auth
+      .signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+            first_name: firstName,
+            last_name: lastName,
+          },
+        },
+      })
+      .then(({ error }) => {
+        if (error) {
+          if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
+            setErrorMessage('Username already exists.')
+        } else router.push('/signin')
       })
   }
 
@@ -136,6 +154,19 @@ const Signup = ({ setErrorMessage }: SignProps) => {
             }}
           />
         </div>
+      </div>
+      <div className={styles.field}>
+        <label>Username</label>
+        <input
+          type="text"
+          placeholder="joey"
+          title="Enter your username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          onKeyDown={event => {
+            if (event.key === 'Enter') submitForm()
+          }}
+        />
       </div>
       <div className={styles.field}>
         <label>Email</label>
@@ -184,6 +215,9 @@ const Signup = ({ setErrorMessage }: SignProps) => {
           onClick={e => {
             e.preventDefault()
             submitForm()
+            // signOut()
+            //   .then(() => console.log('success'))
+            //   .catch(() => console.log('error'))
           }}
         >
           Sign up

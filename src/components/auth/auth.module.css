@@ -4,8 +4,7 @@
   padding: 2rem;
   box-sizing: content-box;
   background-color: var(--background-variant);
-  /* border: solid 1px var(--foreground-variant); */
-  box-shadow: 0 2px 2px var(--foreground-variant);
+  box-shadow: 0 2px 0 var(--foreground-variant), 0 0 2px var(--foreground-variant);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -61,7 +60,6 @@
 .group > :last-child {
   padding-right: 0;
 }
-
 
 .field {
   display: flex;
@@ -120,7 +118,7 @@
   height: 100%;
   border: none;
   border-radius: 0.2rem;
-  color: var(--foreground);
+  color: var(--light);
   background-color: var(--primary);
   box-shadow: 0 4px var(--primary-highlight);
   cursor: pointer;
