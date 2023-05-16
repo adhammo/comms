@@ -1,7 +1,7 @@
 .tiptap {
   position: relative;
   width: 100%;
-  height: calc(100vh - 2rem);
+  height: calc(100vh - 12rem);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -211,6 +211,22 @@
 
 .content ul ul ul {
   list-style-type: square;
+}
+
+.content ol[dir='ltr'],
+.content ul[dir='ltr'] {
+  margin-left: 2rem;
+}
+
+.content ol[dir='rtl'],
+.content ul[dir='rtl'] {
+  margin-right: 2rem;
+}
+
+.content ol *,
+.content ul * {
+  direction: inherit !important;
+  text-align: inherit !important;
 }
 
 .content dd {

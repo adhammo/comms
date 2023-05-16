@@ -1,19 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
-import { FloatingMenu, EditorContent, useEditor, EditorContentProps } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import { Underline } from '@tiptap/extension-underline'
-import Typography from '@tiptap/extension-typography'
-import Link from '@tiptap/extension-link'
-import TextAlign from './TextAlign'
-import TextDirection from './TextDirection'
-import TipImage from './Image'
+import { FloatingMenu, EditorContent, EditorContentProps, Content, JSONContent, Editor } from '@tiptap/react'
 import Select from '@/components/select/select'
 import Enter from '../enter/enter'
 import styles from './tiptap.module.css'
-
 import classNames from 'classnames'
-import { createPost } from '@/lib/posts'
 
 const MenuBar = ({ editor }: EditorContentProps) => {
   if (!editor) {
@@ -46,8 +37,9 @@ const MenuBar = ({ editor }: EditorContentProps) => {
               title: 'Heading',
               element: <Image src="/icons/editor/h1.svg" alt="Heading" width={20} height={20} />,
               callback: () => {
-                const align = editor.state.selection.$anchor.parent.attrs.textAlign
+                let align = editor.state.selection.$anchor.parent.attrs.textAlign
                 const direction = editor.state.selection.$anchor.parent.attrs.textDirection
+                if (!align) align = direction === 'rtl' ? 'right' : 'left'
                 editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
               },
               active: editor.isActive('heading', { level: 2 }),
@@ -56,8 +48,9 @@ const MenuBar = ({ editor }: EditorContentProps) => {
               title: 'SubHeading',
               element: <Image src="/icons/editor/h2.svg" alt="SubHeading" width={20} height={20} />,
               callback: () => {
-                const align = editor.state.selection.$anchor.parent.attrs.textAlign
+                let align = editor.state.selection.$anchor.parent.attrs.textAlign
                 const direction = editor.state.selection.$anchor.parent.attrs.textDirection
+                if (!align) align = direction === 'rtl' ? 'right' : 'left'
                 editor.chain().focus().setHeading({ level: 3 }).setTextDirection(direction).setTextAlign(align).run()
               },
               active: editor.isActive('heading', { level: 3 }),
@@ -66,8 +59,9 @@ const MenuBar = ({ editor }: EditorContentProps) => {
               title: 'Paragraph',
               element: <Image src="/icons/editor/paragraph.svg" alt="Paragraph" width={20} height={20} />,
               callback: () => {
-                const align = editor.state.selection.$anchor.parent.attrs.textAlign
+                let align = editor.state.selection.$anchor.parent.attrs.textAlign
                 const direction = editor.state.selection.$anchor.parent.attrs.textDirection
+                if (!align) align = direction === 'rtl' ? 'right' : 'left'
                 editor.chain().focus().setParagraph().setTextDirection(direction).setTextAlign(align).run()
               },
               active: editor.isActive('paragraph'),
@@ -272,8 +266,9 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
       <div className={styles.headings}>
         <button
           onClick={() => {
-            const align = editor.state.selection.$anchor.parent.attrs.textAlign
+            let align = editor.state.selection.$anchor.parent.attrs.textAlign
             const direction = editor.state.selection.$anchor.parent.attrs.textDirection
+            if (!align) align = direction === 'rtl' ? 'right' : 'left'
             editor.chain().focus().setHeading({ level: 2 }).setTextDirection(direction).setTextAlign(align).run()
           }}
           className={classNames(styles.menuButton, {
@@ -285,8 +280,9 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
         </button>
         <button
           onClick={() => {
-            const align = editor.state.selection.$anchor.parent.attrs.textAlign
+            let align = editor.state.selection.$anchor.parent.attrs.textAlign
             const direction = editor.state.selection.$anchor.parent.attrs.textDirection
+            if (!align) align = direction === 'rtl' ? 'right' : 'left'
             editor.chain().focus().setHeading({ level: 3 }).setTextDirection(direction).setTextAlign(align).run()
           }}
           className={classNames(styles.menuButton, {
@@ -340,109 +336,17 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
   )
 }
 
-export const TipTap = () => {
-  const editor = useEditor({
-    autofocus: true,
-    editable: true,
-    injectCSS: false,
-    editorProps: {
-      attributes: {
-        class: styles.content,
-      },
-      scrollMargin: 20,
-    },
-    extensions: [
-      StarterKit.configure({
-        heading: {
-          levels: [2, 3],
-        },
-      }),
-      Underline,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-        defaultAlignment: 'left',
-      }),
-      TextDirection.configure({
-        types: ['heading', 'paragraph', 'bulletList', 'orderedList', 'listItem'],
-        defaultDirection: 'ltr',
-      }),
-      Typography.configure({
-        oneHalf: false,
-        oneQuarter: false,
-        threeQuarters: false,
-        copyright: false,
-        trademark: false,
-        registeredTrademark: false,
-        servicemark: false,
-      }),
-      Link.configure({
-        autolink: true,
-        openOnClick: false,
-        linkOnPaste: true,
-      }),
-      TipImage,
-    ],
-    content: `
-      <h2>
-        Hi there,
-      </h2>
-      <p>
-        this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-      </p>
-      <ul>
-        <li>
-          That’s a bullet list with one …
-        </li>
-        <li>
-          … or two list items.
-        </li>
-      </ul>
-      <p>
-        Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-      </p>
-      <pre><code class="language-css">body {
-  display: none;
-}</code></pre>
-      <p>
-        I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-      </p>
-      <blockquote>
-        Wow, that’s amazing. Good work, boy! 👏
-        <br />
-        — Mom
-      </blockquote>
-    `,
-  })
+export declare type TipTapProps = {
+  editor: Editor
+}
 
-  const [title, setTitle] = useState('')
-
-  if (!editor) {
-    return null
-  }
-
+export const TipTap = ({ editor }: TipTapProps) => {
   return (
-    <>
-      <input
-        style={{ marginBottom: '1rem' }}
-        placeholder="title"
-        onChange={e => setTitle(e.target.value)}
-        value={title}
-      ></input>
-      <button
-        style={{ marginBottom: '1rem' }}
-        onClick={() => {
-          console.log(JSON.stringify(editor.getJSON()))
-          // createPost(title, JSON.stringify(editor.getJSON()))
-        }}
-      >
-        Submit
-      </button>
-      <div className={styles.tiptap}>
-        <MenuBar editor={editor} />
-        <FloatingMenuBar editor={editor} />
-        <EditorContent className={styles.editor} editor={editor} />
-      </div>
-    </>
+    <div className={styles.tiptap}>
+      <MenuBar editor={editor} />
+      <FloatingMenuBar editor={editor} />
+      <EditorContent className={styles.editor} editor={editor} />
+    </div>
   )
 }
 

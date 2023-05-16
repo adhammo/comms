@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { Open_Sans, Roboto } from 'next/font/google'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import Dropdown from '@/components/dropdown/dropdown'
+import TipTap from '../tiptap/tiptap'
 import classNames from 'classnames'
 import styles from './dashboard.module.css'
 
 import allActions from '@/config/actions'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import editor, { getContent, getEditor, setContent } from '@/tiptap/editor'
 
 const opensans = Open_Sans({
-  weight: '500',
+  weight: ['400', '500'],
   subsets: ['latin'],
 })
 
@@ -25,17 +27,85 @@ declare type User = {
   bio: string
 }
 
+export declare type CategoryProps = {
+  id: string
+  title: string
+  description: string
+}
+
 declare type DashboardProps = { username: string; role: string }
 
 export const Dashboard = ({ username, role }: DashboardProps) => {
+  const supabase = useSupabaseClient()
   const actions = allActions[role]
   const [activeAction, setActiveAction] = useState(actions[0].id)
-  const action = allActions[role].filter(action => action.id == activeAction)[0]
+  const action = allActions[role].find(action => action.id === activeAction)!
 
-  useSupabaseClient()
-    .from('user_categories')
-    .select('*')
-    .then(({ data, error }) => console.log(error))
+  const [loading, setLoading] = useState(true)
+  const [fields, setFields] = useState<any>({})
+  const [editors, setEditors] = useState<any>({})
+  const [props, setProps] = useState<any>({})
+  const [refresh, setRefresh] = useState<any>(false)
+
+  useEffect(() => {
+    const changeAction = async () => {
+      const loaded: any = await action.load(supabase)
+      const newProps: any = {}
+      const newFields: any = {}
+      const newEditors: any = {}
+      action.fields.forEach(field => {
+        const loadedField = loaded[field.id]
+        if (typeof loadedField !== 'undefined') {
+          switch (field.type) {
+            case 'drop':
+              newProps[field.id] = loadedField[0]
+              newFields[field.id] = loadedField[1]
+              break
+            case 'tiptap':
+              newEditors[field.id] = getEditor(loadedField)
+            default:
+              newFields[field.id] = loadedField
+              break
+          }
+        }
+      })
+      setProps(newProps)
+      setFields(newFields)
+      setEditors(newEditors)
+    }
+
+    changeAction()
+      .then(() => setLoading(false))
+      .catch(error => {
+        console.log(error)
+      })
+  }, [activeAction])
+
+  useEffect(() => {
+    if (!refresh) return
+    action.fields.forEach(field => {
+      switch (field.type) {
+        case 'tiptap':
+          setContent(editors[field.id], fields[field.id])
+        default:
+          break
+      }
+    })
+    setRefresh(false)
+  }, [refresh])
+
+  const getFields = () => {
+    const newFields = { ...fields }
+    action.fields.forEach(field => {
+      switch (field.type) {
+        case 'tiptap':
+          newFields[field.id] = getContent(editors[field.id])
+        default:
+          break
+      }
+    })
+    return newFields
+  }
 
   return (
     <div className={styles.dashboard}>
@@ -48,6 +118,8 @@ export const Dashboard = ({ username, role }: DashboardProps) => {
             })}
             title={action.name}
             onClick={() => {
+              if (activeAction === action.id) return
+              setLoading(true)
               setActiveAction(action.id)
             }}
           >
@@ -57,71 +129,85 @@ export const Dashboard = ({ username, role }: DashboardProps) => {
       </div>
       <div className={styles.main}>
         {/* <div className={classNames(styles.error, { [styles.active]: errorMessage !== '' })}>{errorMessage}</div> */}
-        <form className={styles.form}>
-          {action.fields.map(field => (
-            <div key={field.id} className={styles.field}>
-              <label>{field.label}</label>
-              {(() => {
-                switch (field.type) {
-                  case 'category':
-                    return <></>
-                  default:
-                    return (
-                      <input
-                        type={field.type}
-                        title={field.label}
-                        // value={email}
-                        // onChange={e => setEmail(e.target.value)}
-                      />
-                    )
-                }
-              })()}
-            </div>
-          ))}
-        </form>
+        <div className={styles.form}>
+          {!loading &&
+            (fields['error']
+              ? fields['error']
+              : action.fields.map(field => (
+                  <div
+                    key={field.id}
+                    className={classNames(styles.field, { [styles.vertical]: field.type === 'tiptap' })}
+                  >
+                    <label className={opensans.className}>{field.label}</label>
+                    {(() => {
+                      switch (field.type) {
+                        case 'drop':
+                          console.log(props, field, loading)
+                          return (
+                            <Dropdown
+                              title={field.label}
+                              options={props[field.id].map((option: { label: string; value: string }) => ({
+                                active: fields[field.id] === option.value,
+                                label: option.label,
+                                value: option.value,
+                                callback: () => {
+                                  const changes = action.changes[field.id]?.(props, {
+                                    ...fields,
+                                    [field.id]: option.value,
+                                  })
+                                  setFields((oldFields: any) => ({
+                                    ...oldFields,
+                                    ...changes,
+                                    [field.id]: option.value,
+                                  }))
+                                  if (changes?.['refresh']) setRefresh(true)
+                                },
+                              }))}
+                            />
+                          )
+                        case 'tiptap':
+                          return <TipTap editor={editors[field.id]} />
+                        default:
+                          return (
+                            <input
+                              className={roboto.className}
+                              type={field.type}
+                              title={field.label}
+                              value={fields[field.id]}
+                              onChange={e => {
+                                const changes = action.changes[field.id]?.(props, {
+                                  ...fields,
+                                  [field.id]: e.target.value,
+                                })
+                                setFields((oldFields: any) => ({
+                                  ...oldFields,
+                                  ...changes,
+                                  [field.id]: e.target.value,
+                                }))
+                                if (changes?.['refresh']) setRefresh(true)
+                              }}
+                            />
+                          )
+                      }
+                    })()}
+                  </div>
+                )))}
+        </div>
+      </div>
+      <div className={styles.commands}>
+        {action.commands.map(command => (
+          <button
+            key={command.id}
+            className={classNames(styles.command, opensans.className)}
+            title={command.label}
+            onClick={() => command.callback(supabase, getFields())}
+          >
+            {command.label}
+          </button>
+        ))}
       </div>
     </div>
   )
 }
 
 export default Dashboard
-
-// <div className={styles.field}>
-// <label>Email</label>
-// <input
-//   type="email"
-//   placeholder="email@address.com"
-//   title="Enter your email address"
-//   value={email}
-//   onChange={e => setEmail(e.target.value)}
-//   onKeyDown={event => {
-//     if (event.key === 'Enter') submitForm()
-//   }}
-// />
-// </div>
-// <div className={styles.field}>
-// <label>Password</label>
-// <input
-//   type="password"
-//   placeholder="•••••••••"
-//   title="Enter your password"
-//   value={password}
-//   onChange={e => setPassword(e.target.value)}
-//   onKeyDown={event => {
-//     if (event.key === 'Enter') submitForm()
-//   }}
-// />
-// </div>
-// <div className={styles.submitCotainer}>
-// <button
-//   className={styles.submit}
-//   type="button"
-//   title="Sign in to your account"
-//   onClick={e => {
-//     e.preventDefault()
-//     submitForm()
-//   }}
-// >
-//   Sign in
-// </button>
-// </div>

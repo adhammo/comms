@@ -24,7 +24,6 @@ const TextDirectionPlugin = ({ types }: { types: string[] }) => {
             parent?.type.name === 'listItem'
           ) {
             if (node.attrs.textDirection === parent.attrs.textDirection) return
-            console.log(node)
             tr.setNodeAttribute(pos, 'textDirection', parent.attrs.textDirection)
             modified = true
           }

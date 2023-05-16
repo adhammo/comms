@@ -1,20 +1,14 @@
-import React from 'react'
 import { Open_Sans, Roboto } from 'next/font/google'
-import { EditorContent, useEditor, Content } from '@tiptap/react'
+import { Content, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import Typography from '@tiptap/extension-typography'
 import Link from '@tiptap/extension-link'
-import TextAlign from './TextAlign'
-import TextDirection from './TextDirection'
-import TipImage from './Image'
-import styles from './tiptap.module.css'
-
+import TextAlign from '@/components/tiptap/TextAlign'
+import TextDirection from '@/components/tiptap/TextDirection'
+import TipImage from '@/components/tiptap/Image'
 import classNames from 'classnames'
-
-export declare type TipTapProps = {
-  content: Content
-}
+import styles from '@/components/tiptap/tiptap.module.css'
 
 const opensans = Open_Sans({
   subsets: ['latin'],
@@ -26,10 +20,10 @@ const roboto = Roboto({
   weight: '400',
 })
 
-export const Viewer = ({ content }: TipTapProps) => {
-  const editor = useEditor({
+export const getEditor = (content: Content) =>
+  new Editor({
     autofocus: false,
-    editable: false,
+    editable: true,
     injectCSS: false,
     editorProps: {
       attributes: {
@@ -72,17 +66,7 @@ export const Viewer = ({ content }: TipTapProps) => {
     content,
   })
 
-  if (!editor) {
-    return null
-  }
+export const setContent = (editor: Editor, content: Content) => editor.commands.setContent(content)
+export const getContent = (editor: Editor) => editor.getJSON()
 
-  return (
-    <>
-      <div className={classNames(styles.tiptap, styles.viewer)}>
-        <EditorContent className={styles.editor} editor={editor} />
-      </div>
-    </>
-  )
-}
-
-export default Viewer
+export default getEditor

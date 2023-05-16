@@ -13,6 +13,7 @@
   --background-highlight: #d8d8d8ff;
   --background-variant: #eff1f3ff;
   --background-variant: #eaebec;
+  --background-select: rgb(220, 222, 224);
   --shadow: #21252938;
   --gray: #a5a9adff;
   --gray-variant: #60676eff;
@@ -22,6 +23,7 @@
   --primary-highlight: #044ac3ff;
   --primary-shadow: #005afa80;
   --primary-filter: invert(24%) sepia(98%) saturate(4100%) hue-rotate(217deg) brightness(97%) contrast(102%);
+  --primary-variant-filter: invert(15%) sepia(73%) saturate(4074%) hue-rotate(217deg) brightness(90%) contrast(99%);
 
   --accent: #ffd60aff;
   --accent-variant: #ffc300ff;
@@ -46,6 +48,7 @@
     --background: #212529ff;
     --background-highlight: #3b4046ff;
     --background-variant: #292e34ff;
+    --background-select: #3b4046ff;
     --shadow: #12141738;
     --gray: #616971ff;
     --gray-variant: #606971ff;
@@ -55,6 +58,7 @@
     --primary-highlight: #297398;
     --primary-shadow: #00a6fb80;
     --primary-filter: invert(45%) sepia(98%) saturate(2031%) hue-rotate(170deg) brightness(98%) contrast(107%);
+    --primary-variant-filter: invert(37%) sepia(71%) saturate(2587%) hue-rotate(179deg) brightness(88%) contrast(96%);
 
     --bs-body-color: #adb5bd;
     --bs-body-bg: #212529;

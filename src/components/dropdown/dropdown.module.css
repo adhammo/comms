@@ -1,0 +1,113 @@
+.container {
+  position: relative;
+}
+
+.show {
+  width: 16rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 0 0 1px var(--gray);
+  color: var(--foreground);
+  background-color: var(--background);
+  transition: box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.show.active {
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.show:hover,
+.show:focus {
+  box-shadow: inset 0 0 0 1px var(--primary-variant);
+}
+
+.show.active {
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.show img {
+  transition: filter 0.2s;
+  filter: var(--foreground-filter);
+}
+
+.show:hover img,
+.show:focus img {
+  filter: var(--primary-variant-filter);
+}
+
+.show.active img {
+  filter: var(--primary-filter);
+}
+
+.image {
+  margin-left: 0.2rem;
+  transition: transform 0.1s;
+}
+
+.show.active .image {
+  transform: rotate(-180deg);
+}
+
+.popup {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: calc(100% - 0);
+  transform: translate(-50%, 0);
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+
+.popup.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.buttons {
+  width: inherit;
+  background-color: var(--background-variant);
+  border-left: solid 2px var(--primary);
+  border-right: solid 2px var(--primary);
+  border-bottom: solid 2px var(--primary);
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  border-radius: 0 0 0.25rem 0.25rem;
+  overflow: hidden;
+}
+
+.option {
+  text-align: left;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: solid 1px var(--foreground-variant);
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: content-box;
+}
+
+.option:last-child {
+  border-bottom: none;
+}
+
+:not(.hide) .option:hover,
+:not(.hide) .option:active {
+  background-color: var(--background-highlight);
+}
+
+.option img {
+  filter: var(--foreground-filter);
+}
+
+:not(.hide) .option.active img {
+  filter: var(--primary-filter);
+}
