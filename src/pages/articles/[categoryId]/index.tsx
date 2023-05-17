@@ -35,18 +35,21 @@ export declare type CategoryProps = {
   }
 }
 
-export async function getStaticPaths(): Promise<{ paths: CategoryPath[]; fallback: boolean }> {
+export async function getStaticPaths(): Promise<{ paths: CategoryPath[]; fallback: string }> {
   const categories = await getAllLiveCategories()
   return {
     paths: categories.map(category => ({ params: { categoryId: category.id } })),
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 
-export async function getStaticProps({ params: { categoryId } }: CategoryPath): Promise<{ props: CategoryProps }> {
+export async function getStaticProps({
+  params: { categoryId },
+}: CategoryPath): Promise<{ props: CategoryProps; revalidate: number }> {
   const category = await getCategory(categoryId)
   return {
     props: { category } as CategoryProps,
+    revalidate: 600,
   }
 }
 

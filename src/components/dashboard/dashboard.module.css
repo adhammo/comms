@@ -1,6 +1,6 @@
 .dashboard {
   width: 100%;
-  min-height: calc(100vh - 4rem);
+  min-height: 50vh;
   border: solid 2px var(--foreground-variant);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -49,6 +49,10 @@
   background-color: var(--background);
   padding: 1rem;
   /* overflow-y: auto; */
+}
+
+.loader > * {
+  background-color: var(--primary) !important;
 }
 
 .form {

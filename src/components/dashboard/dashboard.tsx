@@ -3,6 +3,7 @@ import { Open_Sans, Roboto } from 'next/font/google'
 import { SupabaseClient, useSupabaseClient } from '@supabase/auth-helpers-react'
 import Dropdown from '@/components/dropdown/dropdown'
 import TipTap from '../tiptap/tiptap'
+import { SyncLoader } from 'react-spinners'
 import classNames from 'classnames'
 import styles from './dashboard.module.css'
 
@@ -165,145 +166,147 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
           ))}
         </div>
         <div className={styles.main}>
-          {/* <div className={classNames(styles.error, { [styles.active]: errorMessage !== '' })}>{errorMessage}</div> */}
-          <div className={styles.form}>
-            {!loading &&
-              (fields['error']
-                ? fields['error']
-                : action.fields.map(field => (
-                    <div
-                      key={field.id}
-                      className={classNames(styles.field, { [styles.vertical]: field.type === 'tiptap' })}
-                    >
-                      <label className={classNames(styles.label, opensans.className)}>{field.label}</label>
-                      {(() => {
-                        switch (field.type) {
-                          case 'drop':
-                            return (
-                              <Dropdown
-                                title={field.label}
-                                options={props[field.id].map((option: { label: string; value: string }) => ({
-                                  active: fields[field.id] === option.value,
-                                  label: option.label,
-                                  value: option.value,
-                                  callback: () => {
-                                    const changes = action.changes[field.id]?.(props, {
-                                      ...fields,
-                                      [field.id]: option.value,
-                                    })
-                                    this.setState(oldState => ({
-                                      fields: {
-                                        ...oldState.fields,
-                                        ...changes,
-                                        [field.id]: option.value,
-                                      },
-                                    }))
-                                    if (changes?.['refresh']) this.setState({ refresh: true })
-                                  },
-                                }))}
-                              />
-                            )
-                          case 'tiptap':
-                            return (
-                              <TipTap
-                                content={fields[field.id]}
-                                setEditor={editor =>
-                                  this.setState(oldState => ({ editors: { ...oldState.editors, [field.id]: editor } }))
-                                }
-                              />
-                            )
-                          case 'image':
-                            const getFileName = (filename: string) =>
-                              filename.length > 22
-                                ? filename.substring(0, 11) + '...' + filename.substring(filename.length - 11)
-                                : filename
-                            return (
-                              <>
-                                <label className={classNames(styles.imageLabel, roboto.className)} title={field.label}>
-                                  <input
-                                    hidden
-                                    className={styles.input}
-                                    type="file"
-                                    accept="image/jpeg, image/jpg"
-                                    onChange={e => {
-                                      const changes = action.changes[field.id]?.(props, {
-                                        ...fields,
-                                        [field.id]: { value: e.target.value, file: e.target.files![0] },
-                                      })
-                                      this.setState(oldState => ({
-                                        fields: {
-                                          ...oldState.fields,
-                                          ...changes,
-                                          [field.id]: { value: e.target.value, file: e.target.files![0] },
-                                        },
-                                      }))
-                                    }}
-                                  />
-                                  {fields[field.id].value ? getFileName(fields[field.id].value) : 'Select image'}
-                                </label>
-                              </>
-                            )
-                          case 'textarea':
-                            return (
-                              <textarea
-                                className={classNames(styles.textarea, roboto.className)}
-                                title={field.label}
-                                value={fields[field.id]}
-                                onChange={e => {
-                                  const value = e.target.value.replace(/\n/g, '')
-                                  const changes = action.changes[field.id]?.(props, {
-                                    ...fields,
-                                    [field.id]: value,
-                                  })
-                                  this.setState(oldState => ({
-                                    fields: {
-                                      ...oldState.fields,
-                                      ...changes,
-                                      [field.id]: value,
-                                    },
-                                  }))
-                                  if (changes?.['refresh']) this.setState({ refresh: true })
-                                }}
-                              />
-                            )
-                          default:
-                            return (
-                              <input
-                                className={classNames(styles.input, roboto.className)}
-                                type={field.type}
-                                title={field.label}
-                                value={fields[field.id]}
-                                onChange={e => {
-                                  const changes = action.changes[field.id]?.(props, {
-                                    ...fields,
-                                    [field.id]: e.target.value,
-                                  })
-                                  this.setState(oldState => ({
-                                    fields: {
-                                      ...oldState.fields,
-                                      ...changes,
-                                      [field.id]: e.target.value,
-                                    },
-                                  }))
-                                  if (changes?.['refresh']) this.setState({ refresh: true })
-                                }}
-                              />
-                            )
-                        }
-                      })()}
-                      {(() => {
-                        const error = field.error?.(fields[field.id])
+          {loading ? (
+            <SyncLoader className={styles.loader} />
+          ) : fields['error'] ? (
+            fields['error']
+          ) : (
+            <div className={styles.form}>
+              {action.fields.map(field => (
+                <div
+                  key={field.id}
+                  className={classNames(styles.field, { [styles.vertical]: field.type === 'tiptap' })}
+                >
+                  <label className={classNames(styles.label, opensans.className)}>{field.label}</label>
+                  {(() => {
+                    switch (field.type) {
+                      case 'drop':
                         return (
-                          (error || field.description) && (
-                            <p className={classNames(styles.description, roboto.className, { [styles.error]: error })}>
-                              {error ?? field.description}
-                            </p>
-                          )
+                          <Dropdown
+                            title={field.label}
+                            options={props[field.id].map((option: { label: string; value: string }) => ({
+                              active: fields[field.id] === option.value,
+                              label: option.label,
+                              value: option.value,
+                              callback: () => {
+                                const changes = action.changes[field.id]?.(props, {
+                                  ...fields,
+                                  [field.id]: option.value,
+                                })
+                                this.setState(oldState => ({
+                                  fields: {
+                                    ...oldState.fields,
+                                    ...changes,
+                                    [field.id]: option.value,
+                                  },
+                                }))
+                                if (changes?.['refresh']) this.setState({ refresh: true })
+                              },
+                            }))}
+                          />
                         )
-                      })()}
-                    </div>
-                  )))}
-          </div>
+                      case 'tiptap':
+                        return (
+                          <TipTap
+                            content={fields[field.id]}
+                            setEditor={editor =>
+                              this.setState(oldState => ({ editors: { ...oldState.editors, [field.id]: editor } }))
+                            }
+                          />
+                        )
+                      case 'image':
+                        const getFileName = (filename: string) =>
+                          filename.length > 22
+                            ? filename.substring(0, 11) + '...' + filename.substring(filename.length - 11)
+                            : filename
+                        return (
+                          <>
+                            <label className={classNames(styles.imageLabel, roboto.className)} title={field.label}>
+                              <input
+                                hidden
+                                className={styles.input}
+                                type="file"
+                                accept="image/jpeg, image/jpg"
+                                onChange={e => {
+                                  const changes = action.changes[field.id]?.(props, {
+                                    ...fields,
+                                    [field.id]: { value: e.target.value, file: e.target.files![0] },
+                                  })
+                                  this.setState(oldState => ({
+                                    fields: {
+                                      ...oldState.fields,
+                                      ...changes,
+                                      [field.id]: { value: e.target.value, file: e.target.files![0] },
+                                    },
+                                  }))
+                                }}
+                              />
+                              {fields[field.id].value ? getFileName(fields[field.id].value) : 'Select image'}
+                            </label>
+                          </>
+                        )
+                      case 'textarea':
+                        return (
+                          <textarea
+                            className={classNames(styles.textarea, roboto.className)}
+                            title={field.label}
+                            value={fields[field.id]}
+                            onChange={e => {
+                              const value = e.target.value.replace(/\n/g, '')
+                              const changes = action.changes[field.id]?.(props, {
+                                ...fields,
+                                [field.id]: value,
+                              })
+                              this.setState(oldState => ({
+                                fields: {
+                                  ...oldState.fields,
+                                  ...changes,
+                                  [field.id]: value,
+                                },
+                              }))
+                              if (changes?.['refresh']) this.setState({ refresh: true })
+                            }}
+                          />
+                        )
+                      default:
+                        return (
+                          <input
+                            className={classNames(styles.input, roboto.className)}
+                            type={field.type}
+                            title={field.label}
+                            value={fields[field.id]}
+                            onChange={e => {
+                              const changes = action.changes[field.id]?.(props, {
+                                ...fields,
+                                [field.id]: e.target.value,
+                              })
+                              this.setState(oldState => ({
+                                fields: {
+                                  ...oldState.fields,
+                                  ...changes,
+                                  [field.id]: e.target.value,
+                                },
+                              }))
+                              if (changes?.['refresh']) this.setState({ refresh: true })
+                            }}
+                          />
+                        )
+                    }
+                  })()}
+                  {(() => {
+                    const error = field.error?.(fields[field.id])
+                    return (
+                      (error || field.description) && (
+                        <p className={classNames(styles.description, roboto.className, { [styles.error]: error })}>
+                          {error ?? field.description}
+                        </p>
+                      )
+                    )
+                  })()}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div className={styles.commands}>
           {!loading &&
@@ -316,10 +319,11 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
                     className={classNames(styles.command, opensans.className)}
                     title={command.label}
                     onClick={async () => {
+                      this.setState({ loading: true })
                       const error = await command.callback(this.props.supabase, this.getFields())
                       if (!error) {
                         this.props.setStatus(`${action.name} succeeded`, false)
-                        this.setState({ loading: true, reload: true })
+                        this.setState({ reload: true })
                       } else {
                         this.props.setStatus(error, true)
                       }

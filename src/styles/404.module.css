@@ -1,0 +1,30 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.code {
+  color: var(--danger);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.status {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0 0 1rem;
+}
+
+.message {
+  font-size: 1rem;
+}

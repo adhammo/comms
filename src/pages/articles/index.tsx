@@ -25,10 +25,11 @@ export declare type CategoriesProps = {
   }[]
 }
 
-export async function getStaticProps(): Promise<{ props: CategoriesProps }> {
+export async function getStaticProps(): Promise<{ props: CategoriesProps, revalidate: number }> {
   const categories = await getAllLiveCategories()
   return {
     props: { categories },
+    revalidate: 600,
   }
 }
 

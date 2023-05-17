@@ -39,19 +39,22 @@ export declare type AuthorProps = {
   }[]
 }
 
-export async function getStaticPaths(): Promise<{ paths: AuthorPath[]; fallback: boolean }> {
+export async function getStaticPaths(): Promise<{ paths: AuthorPath[]; fallback: string }> {
   const profiles = await getAllLiveProfiles()
   return {
     paths: profiles.map(profile => ({ params: { username: profile.username } })),
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 
-export async function getStaticProps({ params: { username } }: AuthorPath): Promise<{ props: AuthorProps }> {
+export async function getStaticProps({
+  params: { username },
+}: AuthorPath): Promise<{ props: AuthorProps; revalidate: number }> {
   const profile = await getProfile(username)
   const posts = await getUserPosts(profile.username)
   return {
     props: { profile, posts } as AuthorProps,
+    revalidate: 600,
   }
 }
 

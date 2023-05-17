@@ -37,18 +37,21 @@ export declare type PostProps = {
   }
 }
 
-export async function getStaticPaths(): Promise<{ paths: PostPath[]; fallback: boolean }> {
+export async function getStaticPaths(): Promise<{ paths: PostPath[]; fallback: string }> {
   const posts = await getAllLivePosts()
   return {
     paths: posts.map(post => ({ params: { categoryId: post.category, postId: post.id } })),
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 
-export async function getStaticProps({ params: { postId } }: PostPath): Promise<{ props: PostProps }> {
+export async function getStaticProps({
+  params: { postId },
+}: PostPath): Promise<{ props: PostProps; revalidate: number }> {
   const post = await getPost(postId)
   return {
     props: { post } as PostProps,
+    revalidate: 600,
   }
 }
 

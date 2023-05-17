@@ -77,9 +77,9 @@ const Signin = ({ setErrorMessage, setStatus }: SignProps) => {
           Sign in
         </button>
       </div>
-      <Link className={styles.link} href="/forget">
+      {/* <Link className={styles.link} href="/forget">
         Forgot your password?
-      </Link>
+      </Link> */}
       <Link className={styles.link} href="/signup">
         Don't have an account? Sign up
       </Link>
@@ -222,9 +222,6 @@ const Signup = ({ setErrorMessage, setStatus }: SignProps) => {
           onClick={e => {
             e.preventDefault()
             submitForm()
-            // signOut()
-            //   .then(() => console.log('success'))
-            //   .catch(() => console.log('error'))
           }}
         >
           Sign up
