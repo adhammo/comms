@@ -111,26 +111,24 @@ export async function getAllCategories() {
 }
 
 export async function getUserCategories(username: string) {
-  const { data, error } = await supabase
-    .from('user_categories')
-    .select('categories (*)')
-    .eq('username', username)
-    .order('title')
+  const { data, error } = await supabase.from('user_categories').select('categories (*)').eq('username', username)
   if (error) throw error
-  return data.map(
-    category =>
-      category.categories as {
-        description: string
-        id: string
-        live: boolean
-        title: string
-      }
-  ) as {
-    description: string
-    id: string
-    live: boolean
-    title: string
-  }[]
+  return (
+    data.map(
+      category =>
+        category.categories as {
+          description: string
+          id: string
+          live: boolean
+          title: string
+        }
+    ) as {
+      description: string
+      id: string
+      live: boolean
+      title: string
+    }[]
+  ).sort()
 }
 
 export async function getCategory(categoryId: string) {
