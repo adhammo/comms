@@ -33,6 +33,7 @@
   transform: translate(-100%, 0);
   opacity: 1;
   transition: opacity 0.1s;
+  z-index: 101;
 }
 
 .popup.hide {

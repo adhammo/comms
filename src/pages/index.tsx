@@ -9,7 +9,7 @@ export const Home = ({ title }: { title: string }) => (
       <title>EECE Blog Website | Comms</title>
       <meta name="description" content="EECE Website" />
     </Head>
-    <TipTap />
+    
   </>
 )
 

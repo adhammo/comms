@@ -5,7 +5,7 @@ import CategoryCard from '@/components/category/category'
 import styles from '@/styles/categories.module.css'
 import classNames from 'classnames'
 
-import { getAllCategories } from '@/lib/posts'
+import { getAllLiveCategories } from '@/lib/posts'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,7 +26,7 @@ export declare type CategoriesProps = {
 }
 
 export async function getStaticProps(): Promise<{ props: CategoriesProps }> {
-  const categories = await getAllCategories()
+  const categories = await getAllLiveCategories()
   return {
     props: { categories },
   }

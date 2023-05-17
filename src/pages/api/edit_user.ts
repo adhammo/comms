@@ -4,8 +4,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
-import { getProfileById } from '@/lib/profiles'
-import { checkCategory, checkPost, checkUserCategory, createPost } from '@/lib/posts'
+import { getProfileById, updateProfile } from '@/lib/profiles'
+import { PostgrestError } from '@supabase/supabase-js'
 
 export declare type Post = {
   author: string
@@ -42,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } = await supabaseClient.auth.getUser()
 
   if (!user) {
-    res.status(401).send('Unauthorized post creation')
+    res.status(401).send('Unauthorized user update')
     return
   }
 
@@ -56,51 +56,33 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     {}
   )
 
-  const { category, id, title, description, read_time, content } = fields
-  if (!category || !id || !title || !description || !read_time || !content) {
+  const { first_name, last_name, bio } = fields
+  if (!first_name || !last_name || !bio) {
     res.status(400).send('Missing post data')
     return
   }
 
   const { image } = files
-  if (!image) {
-    res.status(400).send('Missing post data')
-    return
-  }
 
   try {
     const profile = await getProfileById(user.id)
-    if (profile.role === 'owner' || profile.role === 'manager') {
-      if (!(await checkCategory(category))) {
-        res.status(400).send('No category with this id')
-        return
-      }
-    } else {
-      if (!(await checkUserCategory(profile.username, category))) {
-        res.status(400).send('Category is not available for this user')
-        return
-      }
+    if (image) {
+      const { error } = await supabase.storage
+        .from('images')
+        .upload(`/profiles/${profile.username}.jpg`, fs.readFileSync(image.path), {
+          upsert: true,
+          contentType: 'image/jpg',
+        })
+      if (error) throw error
     }
-    if (await checkPost(id)) {
-      res.status(400).send('Post with same Id already exists')
-      return
-    }
-    const { error } = await supabase.storage
-      .from('images')
-      .upload(`/posts/${id}.jpg`, fs.readFileSync(image.path), { contentType: 'image/jpg' })
-    if (error) throw error
-    await createPost({
-      category,
-      id,
-      title,
-      description,
-      read_time: parseInt(read_time),
-      content: JSON.parse(content),
-      author: profile.username,
+    await updateProfile(profile.username, {
+      first_name,
+      last_name,
+      bio,
     })
     res.status(200).send('Success')
   } catch (error) {
-    res.status(500).send((error as Error).message)
+    res.status(500).send((error as PostgrestError).message)
   }
 }
 

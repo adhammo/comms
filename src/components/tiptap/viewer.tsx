@@ -7,7 +7,7 @@ import Typography from '@tiptap/extension-typography'
 import Link from '@tiptap/extension-link'
 import TextAlign from './TextAlign'
 import TextDirection from './TextDirection'
-import TipImage from './Image'
+import TipImage from '@tiptap/extension-image'
 import styles from './tiptap.module.css'
 
 import classNames from 'classnames'

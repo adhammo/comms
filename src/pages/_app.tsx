@@ -15,9 +15,7 @@ const App = ({
   return (
     <>
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Layout>{setStatus => <Component {...pageProps} setStatus={setStatus} />}</Layout>
       </SessionContextProvider>
     </>
   )

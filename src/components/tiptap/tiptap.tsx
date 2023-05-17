@@ -1,10 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
-import { FloatingMenu, EditorContent, EditorContentProps, Content, JSONContent, Editor } from '@tiptap/react'
+import { Open_Sans, Roboto } from 'next/font/google'
+import { FloatingMenu, EditorContent, EditorContentProps, JSONContent, useEditor } from '@tiptap/react'
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Underline } from '@tiptap/extension-underline'
+import Typography from '@tiptap/extension-typography'
+import Link from '@tiptap/extension-link'
+import TextAlign from '@/components/tiptap/TextAlign'
+import TextDirection from '@/components/tiptap/TextDirection'
+import TipImage from '@tiptap/extension-image'
 import Select from '@/components/select/select'
 import Enter from '../enter/enter'
 import styles from './tiptap.module.css'
 import classNames from 'classnames'
+
+const opensans = Open_Sans({
+  subsets: ['latin'],
+  weight: '600',
+})
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: '400',
+})
 
 const MenuBar = ({ editor }: EditorContentProps) => {
   if (!editor) {
@@ -336,11 +355,55 @@ const FloatingMenuBar = ({ editor }: EditorContentProps) => {
   )
 }
 
-export declare type TipTapProps = {
-  editor: Editor
-}
+export declare type TiptapProps = { content: JSONContent; setEditor: (editor: Editor) => void }
 
-export const TipTap = ({ editor }: TipTapProps) => {
+export const TipTap = ({ content, setEditor }: TiptapProps) => {
+  const editor = useEditor({
+    autofocus: false,
+    editable: true,
+    injectCSS: false,
+    editorProps: {
+      attributes: {
+        class: classNames(styles.content, roboto.className),
+      },
+      scrollMargin: 20,
+    },
+    extensions: [
+      StarterKit.configure({
+        heading: {
+          levels: [2, 3],
+          HTMLAttributes: { class: opensans.className },
+        },
+      }),
+      Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+        defaultAlignment: 'left',
+      }),
+      TextDirection.configure({
+        types: ['heading', 'paragraph', 'bulletList', 'orderedList', 'listItem'],
+        defaultDirection: 'ltr',
+      }),
+      Typography.configure({
+        oneHalf: false,
+        oneQuarter: false,
+        threeQuarters: false,
+        copyright: false,
+        trademark: false,
+        registeredTrademark: false,
+        servicemark: false,
+      }),
+      Link.configure({
+        autolink: true,
+        openOnClick: false,
+        linkOnPaste: true,
+      }),
+      TipImage,
+    ],
+    content,
+    onCreate: ({ editor: createdEditor }) => setEditor(createdEditor),
+  })
+
   return (
     <div className={styles.tiptap}>
       <MenuBar editor={editor} />

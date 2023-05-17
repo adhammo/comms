@@ -7,9 +7,10 @@ import styles from './auth.module.css'
 
 export declare type SignProps = {
   setErrorMessage: (error: string) => void
+  setStatus: (message: string, error: boolean) => void
 }
 
-const Signin = ({ setErrorMessage }: SignProps) => {
+const Signin = ({ setErrorMessage, setStatus }: SignProps) => {
   const router = useRouter()
   const supabase = useSupabaseClient()
   const [email, setEmail] = useState('')
@@ -28,7 +29,10 @@ const Signin = ({ setErrorMessage }: SignProps) => {
       })
       .then(({ error }) => {
         if (error) setErrorMessage('Incorrect email or password.')
-        else router.push('/author')
+        else {
+          setStatus('Sign in succeeded', false)
+          router.push('/author')
+        }
       })
   }
 
@@ -83,7 +87,7 @@ const Signin = ({ setErrorMessage }: SignProps) => {
   )
 }
 
-const Signup = ({ setErrorMessage }: SignProps) => {
+const Signup = ({ setErrorMessage, setStatus }: SignProps) => {
   const router = useRouter()
   const supabase = useSupabaseClient()
   const [firstName, setFirstName] = useState('')
@@ -121,7 +125,10 @@ const Signup = ({ setErrorMessage }: SignProps) => {
         if (error) {
           if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
             setErrorMessage('Username already exists.')
-        } else router.push('/signin')
+        } else {
+          setStatus('Sign up succeeded', false)
+          router.push('/signin')
+        }
       })
   }
 
@@ -234,9 +241,10 @@ export declare type AuthType = 'Sign In' | 'Sign Up' | 'Forget Password'
 
 export declare type AuthProps = {
   authType: AuthType
+  setStatus: (message: string, error: boolean) => void
 }
 
-export const Auth = ({ authType }: AuthProps) => {
+export const Auth = ({ authType, setStatus }: AuthProps) => {
   const [errorMessage, setErrorMessage] = useState('')
 
   return (
@@ -248,9 +256,9 @@ export const Auth = ({ authType }: AuthProps) => {
       </h1>
       <div className={classNames(styles.error, { [styles.active]: errorMessage !== '' })}>{errorMessage}</div>
       <form className={styles.form}>
-        {(authType === 'Sign In' && <Signin setErrorMessage={setErrorMessage} />) ||
-          (authType === 'Sign Up' && <Signup setErrorMessage={setErrorMessage} />) ||
-          (authType === 'Forget Password' && <Signin setErrorMessage={setErrorMessage} />)}
+        {(authType === 'Sign In' && <Signin setErrorMessage={setErrorMessage} setStatus={setStatus} />) ||
+          (authType === 'Sign Up' && <Signup setErrorMessage={setErrorMessage} setStatus={setStatus} />) ||
+          (authType === 'Forget Password' && <Signin setErrorMessage={setErrorMessage} setStatus={setStatus}/>)}
       </form>
     </div>
   )

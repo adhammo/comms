@@ -5,7 +5,7 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
 import { getProfileById } from '@/lib/profiles'
-import { checkCategory, checkPost, checkUserCategory, createPost } from '@/lib/posts'
+import { checkCategory, checkPost, checkUserCategory, createCategory, createPost } from '@/lib/posts'
 
 export declare type Post = {
   author: string
@@ -42,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } = await supabaseClient.auth.getUser()
 
   if (!user) {
-    res.status(401).send('Unauthorized post creation')
+    res.status(401).send('Unauthorized category creation')
     return
   }
 
@@ -56,47 +56,36 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     {}
   )
 
-  const { category, id, title, description, read_time, content } = fields
-  if (!category || !id || !title || !description || !read_time || !content) {
-    res.status(400).send('Missing post data')
+  const { id, title, description } = fields
+  if (!id || !title || !description) {
+    res.status(400).send('Missing category data')
     return
   }
 
   const { image } = files
   if (!image) {
-    res.status(400).send('Missing post data')
+    res.status(400).send('Missing category data')
     return
   }
 
   try {
     const profile = await getProfileById(user.id)
-    if (profile.role === 'owner' || profile.role === 'manager') {
-      if (!(await checkCategory(category))) {
-        res.status(400).send('No category with this id')
-        return
-      }
-    } else {
-      if (!(await checkUserCategory(profile.username, category))) {
-        res.status(400).send('Category is not available for this user')
-        return
-      }
+    if (!(profile.role === 'owner' || profile.role === 'manager')) {
+      res.status(401).send('User is not authorized to create categories')
+      return
     }
-    if (await checkPost(id)) {
-      res.status(400).send('Post with same Id already exists')
+    if (await checkCategory(id)) {
+      res.status(400).send('Category with same Id already exists')
       return
     }
     const { error } = await supabase.storage
       .from('images')
-      .upload(`/posts/${id}.jpg`, fs.readFileSync(image.path), { contentType: 'image/jpg' })
+      .upload(`/categories/${id}.jpg`, fs.readFileSync(image.path), { contentType: 'image/jpg' })
     if (error) throw error
-    await createPost({
-      category,
+    await createCategory({
       id,
       title,
       description,
-      read_time: parseInt(read_time),
-      content: JSON.parse(content),
-      author: profile.username,
     })
     res.status(200).send('Success')
   } catch (error) {

@@ -1,5 +1,7 @@
-import { SUPABASE_URL } from './client'
+import supabase from './client'
 
-export const getImageSrc = (src: string) => `${SUPABASE_URL}/storage/v1/object/public/images${src}`
+export function getImageSrc(path: string) {
+  return supabase.storage.from('images').getPublicUrl(path).data.publicUrl
+}
 
 export default getImageSrc

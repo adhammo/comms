@@ -6,7 +6,7 @@
 }
 
 .image {
-  height: 10rem;
+  width: 10rem;
   border-radius: 100%;
   border: 2px solid var(--background-variant);
   box-shadow: 0 0 10px -4px var(--foreground-variant);
@@ -20,15 +20,43 @@
   margin-bottom: 0.5rem;
 }
 
-.bio {
-  font-size: 1rem;
+
+.signoutContainer {
+  margin-top: 0.5rem;
+  height: 3rem;
+  box-sizing: border-box;
+  padding: 0 0 4px 0;
+  transition: padding 0.1s;
+}
+
+.signoutContainer:hover,
+.signoutContainer:active {
+  padding: 2px 0 2px 0;
+}
+
+.signout {
+  font-weight: bold;
+  padding: 0 2rem;
+  height: 100%;
+  border: none;
+  border-radius: 0.2rem;
+  color: var(--light);
+  background-color: var(--primary);
+  box-shadow: 0 4px var(--primary-highlight);
+  cursor: pointer;
+  transition: box-shadow 0.1s;
+}
+
+.signoutContainer:hover .signout,
+.signoutContainer:active .signout {
+  box-shadow: 0 2px var(--primary-variant);
 }
 
 .head {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  margin-bottom: 2rem;
+  margin: 2rem 0;
 }
 
 .title {

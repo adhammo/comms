@@ -11,15 +11,59 @@
   margin-bottom: 0.25rem;
 }
 
-.description {
+.info {
+  display: flex;
+  align-items: center;
   font-size: 1rem;
   font-weight: 400;
 }
 
-.posts {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+.author {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.authorImage {
+  height: 2rem;
+  border-radius: 100%;
+  margin-right: 0.5rem;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
+.name {
+  position: relative;
+  font-size: 1rem;
+}
+
+.author:hover .name,
+.author:active .name,
+.author:focus .name {
+  transition: color 0.2s;
+  color: var(--primary);
+}
+
+.name::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 0);
+  width: 0%;
+  height: 2px;
+  background-color: var(--primary);
+}
+
+.author:hover .name::after,
+.author:active .name::after,
+.author:focus .name::after {
+  transition: width 0.2s;
+  width: 100%;
+}
+
+.time {
+  opacity: 0.8;
 }
 
 @media (max-width: 600px) {

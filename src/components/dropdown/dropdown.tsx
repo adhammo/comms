@@ -1,5 +1,6 @@
 import React, { ReactElement, useRef, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { Open_Sans, Roboto } from 'next/font/google'
 import styles from './dropdown.module.css'
 
 import classNames from 'classnames'
@@ -16,6 +17,16 @@ export declare type SelectProps = {
   options: Option[]
   onShow?: () => void
 }
+
+const opensans = Open_Sans({
+  weight: ['400', '500'],
+  subsets: ['latin'],
+})
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: '400',
+})
 
 export const Select = ({ title, options, onShow }: SelectProps) => {
   const showRef = useRef<HTMLButtonElement>(null)
@@ -51,7 +62,7 @@ export const Select = ({ title, options, onShow }: SelectProps) => {
           setShow(!show)
           onShow?.()
         }}
-        className={classNames(styles.show, {
+        className={classNames(styles.show, roboto.className, {
           [styles.active]: show,
         })}
         title={title}
@@ -72,7 +83,7 @@ export const Select = ({ title, options, onShow }: SelectProps) => {
                     }
                   : undefined
               }
-              className={classNames(styles.option, {
+              className={classNames(styles.option, roboto.className, {
                 [styles.active]: option.active,
               })}
               title={option.label}

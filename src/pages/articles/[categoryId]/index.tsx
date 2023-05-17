@@ -5,7 +5,7 @@ import PostCard from '@/components/post/post'
 import styles from '@/styles/category.module.css'
 import classNames from 'classnames'
 
-import { getAllCategories, getCategory } from '@/lib/posts'
+import { getAllLiveCategories, getCategory } from '@/lib/posts'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -26,7 +26,7 @@ export declare type CategoryProps = {
     description: string
     posts: {
       id: string
-      author: string
+      profiles: { username: string; first_name: string; last_name: string }
       created_at: string
       title: string
       description: string
@@ -36,7 +36,7 @@ export declare type CategoryProps = {
 }
 
 export async function getStaticPaths(): Promise<{ paths: CategoryPath[]; fallback: boolean }> {
-  const categories = await getAllCategories()
+  const categories = await getAllLiveCategories()
   return {
     paths: categories.map(category => ({ params: { categoryId: category.id } })),
     fallback: false,
@@ -46,7 +46,7 @@ export async function getStaticPaths(): Promise<{ paths: CategoryPath[]; fallbac
 export async function getStaticProps({ params: { categoryId } }: CategoryPath): Promise<{ props: CategoryProps }> {
   const category = await getCategory(categoryId)
   return {
-    props: { category },
+    props: { category } as CategoryProps,
   }
 }
 
@@ -71,7 +71,7 @@ export default function Category({ category }: CategoryProps) {
                 description={post.description}
                 createdAt={post.created_at}
                 category={category.id}
-                author={post.author}
+                profiles={post.profiles}
                 readTime={post.read_time}
               />
             ))

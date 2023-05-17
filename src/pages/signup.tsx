@@ -3,7 +3,11 @@ import Head from 'next/head'
 
 import Auth from '@/components/auth/auth'
 
-export const Signup = () => (
+export declare type SignupProps = {
+  setStatus: (message: string, error: boolean) => void
+}
+
+export const Signup = ({ setStatus }: SignupProps) => (
   <>
     <Head>
       <title>Sign up | Comms</title>
@@ -18,7 +22,7 @@ export const Signup = () => (
         justifyContent: 'center',
       }}
     >
-      <Auth authType={'Sign Up'} />
+      <Auth authType={'Sign Up'} setStatus={setStatus} />
     </div>
   </>
 )

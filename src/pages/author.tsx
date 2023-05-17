@@ -8,6 +8,8 @@ import styles from '@/styles/author.module.css'
 
 import getImageSrc from '@/lib/storage'
 import { getProfileById } from '@/lib/profiles'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { useRouter } from 'next/router'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,7 +29,11 @@ declare type User = {
   bio: string
 }
 
-declare type AuthorProps = { initailSession: Session; user: User }
+declare type AuthorProps = {
+  initailSession: Session
+  user: User
+  setStatus: (message: string, error: boolean) => void
+}
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx)
@@ -51,23 +57,50 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-export const Author = ({ user: { username, first_name, last_name, bio, role } }: AuthorProps) => (
-  <>
-    <Head>
-      <title>Author | Comms</title>
-      <meta name="description" content="Manage and author articles" />
-    </Head>
-    <div className={styles.author}>
-      <img className={styles.image} src={getImageSrc(`/profiles/${username}.jpg`)} alt={`${first_name} Image`} />
-      <h1 className={classNames(styles.name, inter.className)}>{`${first_name} ${last_name}`}</h1>
-      <p className={classNames(styles.bio, roboto.className)}>{bio}</p>
-    </div>
-    <div className={styles.head}>
-      <h1 className={classNames(styles.title, inter.className)}>Dashboard</h1>
-      <p className={classNames(styles.description, roboto.className)}>What action you want to take?</p>
-    </div>
-    <Dashboard username={username} role={role} />
-  </>
-)
+export const Author = ({ user: { username, first_name, last_name, bio, role }, setStatus }: AuthorProps) => {
+  const router = useRouter()
+  const supabase = useSupabaseClient()
+  return (
+    <>
+      <Head>
+        <title>Author | Comms</title>
+        <meta name="description" content="Manage and author articles" />
+      </Head>
+      <div className={styles.author}>
+        <img
+          className={styles.image}
+          src={getImageSrc(`/profiles/${username}.jpg`)}
+          alt={`${first_name} Image`}
+          width={200}
+          height={200}
+        />
+        <h1 className={classNames(styles.name, inter.className)}>{`${first_name} ${last_name}`}</h1>
+        <div className={styles.signoutContainer}>
+          <button
+            className={styles.signout}
+            type="button"
+            title="Sign out of your account"
+            onClick={() => {
+              supabase.auth.signOut().then(({ error }) => {
+                if (error) setStatus(error.message, true)
+                else {
+                  setStatus('Sign out succeeded', false)
+                  router.push('/')
+                }
+              })
+            }}
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+      <div className={styles.head}>
+        <h1 className={classNames(styles.title, inter.className)}>Dashboard</h1>
+        <p className={classNames(styles.description, roboto.className)}>What action you want to take?</p>
+      </div>
+      <Dashboard username={username} role={role} setStatus={setStatus} />
+    </>
+  )
+}
 
 export default Author

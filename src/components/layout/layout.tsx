@@ -11,7 +11,7 @@ import { navigables } from '@/config/navigation'
 import MenuIcon from '@/icons/menu.icon'
 
 export declare type LayoutProps = {
-  children: ReactNode
+  children: (setStatus: (message: string, error: boolean) => void) => ReactNode
 }
 
 const raleway = Raleway({
@@ -20,12 +20,13 @@ const raleway = Raleway({
 })
 
 const opensans = Open_Sans({
-  weight: '700',
+  weight: ['700', '500'],
   subsets: ['latin'],
 })
 
 export const Layout = ({ children }: LayoutProps) => {
-  const router = useRouter();
+  const router = useRouter()
+  const [status, SetStatus] = useState({ show: false, message: '', error: false })
   const [sidebar, SetSidebar] = useState(false)
   const openSidebar = () => SetSidebar(true)
   const closeSidebar = () => SetSidebar(false)
@@ -33,7 +34,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const [isMobile, setIsMobile] = useState(false)
   const checkForMobile = () => {
     setIsMobile(mobile => {
-      if (!mobile && window.innerWidth <= 700) closeSidebar()
+      if (mobile && window.innerWidth >= 700) closeSidebar()
       return window.innerWidth <= 700
     })
   }
@@ -47,7 +48,16 @@ export const Layout = ({ children }: LayoutProps) => {
 
   useEffect(() => {
     closeSidebar()
-  }, [router.pathname]);
+  }, [router.pathname])
+
+  useEffect(() => {
+    if (status.message) {
+      const timeout = setTimeout(() => {
+        SetStatus(oldStatus => ({ ...oldStatus, show: false }))
+      }, 5000)
+      return () => clearTimeout(timeout)
+    }
+  }, [status])
 
   return (
     <>
@@ -87,7 +97,9 @@ export const Layout = ({ children }: LayoutProps) => {
         </div>
       </header>
 
-      <main className={classNames(styles.main, { [styles.hide]: sidebar })}>{children}</main>
+      <main className={classNames(styles.main, { [styles.hide]: sidebar })}>
+        {children((message, error) => SetStatus({ show: true, message, error }))}
+      </main>
       <footer className={styles.footer}></footer>
       {isMobile && (
         <div className={classNames(styles.sidebar, { [styles.hide]: !sidebar })}>
@@ -96,11 +108,7 @@ export const Layout = ({ children }: LayoutProps) => {
               <Image src="/comms.svg" alt="Comms Logo" width={20} height={20} priority />
               <h1 className={classNames(styles.title, raleway.className)}>comms</h1>
             </Link>
-            <button
-              className={styles.menu}
-              title="Close Sidebar"
-              onClick={sidebar ? closeSidebar : undefined}
-            >
+            <button className={styles.menu} title="Close Sidebar" onClick={sidebar ? closeSidebar : undefined}>
               <Image src="/icons/editor/close.svg" alt="Close" width={32} height={32} priority />
             </button>
           </div>
@@ -126,6 +134,21 @@ export const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
       )}
+      <div
+        className={classNames(styles.status, opensans.className, {
+          [styles.show]: status.show,
+          [styles.error]: status.error,
+        })}
+      >
+        {status.message}
+        <button
+          className={styles.ignore}
+          title="Ignore Status"
+          onClick={status.show ? () => SetStatus(oldStatus => ({ ...oldStatus, show: false })) : undefined}
+        >
+          <Image src="/icons/editor/close.svg" alt="Close" width={18} height={18} priority />
+        </button>
+      </div>
     </>
   )
 }

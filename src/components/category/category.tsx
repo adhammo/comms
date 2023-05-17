@@ -26,7 +26,13 @@ export const Category = ({ id, title, description }: CategoryProps) => {
   return (
     <Link className={styles.card} title={`${title} Articles`} href={`/articles/${id}`}>
       <div className={styles.head}>
-        <img className={styles.image} src={getImageSrc(`/categories/${id}.jpg`)} alt={`${title} Image`} />
+        <img
+          className={styles.image}
+          src={getImageSrc(`/categories/${id}.jpg`)}
+          alt={`${title} Image`}
+          width={400}
+          height={400}
+        />
       </div>
       <div className={styles.body}>
         <h2 className={classNames(styles.title, inter.className)}>{title}</h2>
