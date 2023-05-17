@@ -4,7 +4,7 @@ import { Database } from '@/lib/database'
 import { getProfileById } from '@/lib/profiles'
 import { PostgrestError } from '@supabase/supabase-js'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function user(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).send('Only POST requests allowed')
     return

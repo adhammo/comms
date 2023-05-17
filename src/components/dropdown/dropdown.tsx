@@ -31,28 +31,27 @@ const roboto = Roboto({
 export const Select = ({ title, options, onShow }: SelectProps) => {
   const showRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
-
-  const onMouseDown = (ev: MouseEvent) => {
-    if (!show) return
-    if (
-      popupRef.current &&
-      !popupRef.current.contains(ev.target as Node) &&
-      !showRef.current?.contains(ev.target as Node)
-    ) {
-      setShow(false)
-    }
-  }
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
+    const onMouseDown = (ev: MouseEvent) => {
+      if (!show) return
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(ev.target as Node) &&
+        !showRef.current?.contains(ev.target as Node)
+      ) {
+        setShow(false)
+      }
+    }
     if (!popupRef.current) {
       document.removeEventListener('mousedown', onMouseDown)
       return
     }
     document.addEventListener('mousedown', onMouseDown)
     return () => document.removeEventListener('mousedown', onMouseDown)
-  }, [popupRef, onMouseDown])
+  }, [popupRef, show])
 
-  const [show, setShow] = useState(false)
 
   return (
     <div className={styles.container}>

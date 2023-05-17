@@ -339,7 +339,7 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
   }
 }
 
-export default function ({
+export default function DashboardWrapper ({
   username,
   role,
   setStatus,

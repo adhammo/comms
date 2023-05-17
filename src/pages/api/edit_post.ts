@@ -28,7 +28,7 @@ async function parser(req: NextApiRequest) {
   })
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function edit_post(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).send('Only POST requests allowed')
     return

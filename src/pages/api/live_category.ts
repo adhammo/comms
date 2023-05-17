@@ -5,7 +5,15 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
 import { getProfileById } from '@/lib/profiles'
-import { checkCategory, checkPost, checkUserCategory, createCategory, createPost, liveCategory, updateCategory } from '@/lib/posts'
+import {
+  checkCategory,
+  checkPost,
+  checkUserCategory,
+  createCategory,
+  createPost,
+  liveCategory,
+  updateCategory,
+} from '@/lib/posts'
 
 export declare type Post = {
   author: string
@@ -27,7 +35,7 @@ async function parser(req: NextApiRequest) {
   })
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function live_category(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).send('Only POST requests allowed')
     return

@@ -81,7 +81,7 @@ const Signin = ({ setErrorMessage, setStatus }: SignProps) => {
         Forgot your password?
       </Link> */}
       <Link className={styles.link} href="/signup">
-        Don't have an account? Sign up
+        Don&apos;t have an account? Sign up
       </Link>
     </>
   )

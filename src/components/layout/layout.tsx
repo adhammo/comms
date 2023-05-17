@@ -32,13 +32,14 @@ export const Layout = ({ children }: LayoutProps) => {
   const closeSidebar = () => SetSidebar(false)
 
   const [isMobile, setIsMobile] = useState(false)
-  const checkForMobile = () => {
-    setIsMobile(mobile => {
-      if (mobile && window.innerWidth >= 700) closeSidebar()
-      return window.innerWidth <= 700
-    })
-  }
+
   useEffect(() => {
+    const checkForMobile = () => {
+      setIsMobile(mobile => {
+        if (mobile && window.innerWidth >= 700) closeSidebar()
+        return window.innerWidth <= 700
+      })
+    }
     checkForMobile()
     window.addEventListener('resize', checkForMobile)
     return () => {

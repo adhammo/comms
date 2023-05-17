@@ -28,28 +28,27 @@ export const Enter = ({ header, placeholder, initalValue, actions, onShow }: Ent
   const showRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
 
-  const onMouseDown = (ev: MouseEvent) => {
-    if (!show) return
-    if (
-      popupRef.current &&
-      !popupRef.current.contains(ev.target as Node) &&
-      !showRef.current?.contains(ev.target as Node)
-    ) {
-      setShow(false)
-    }
-  }
+  const [show, setShow] = useState(false)
+  const [value, setValue] = useState(initalValue)
 
   useEffect(() => {
+    const onMouseDown = (ev: MouseEvent) => {
+      if (!show) return
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(ev.target as Node) &&
+        !showRef.current?.contains(ev.target as Node)
+      ) {
+        setShow(false)
+      }
+    }
     if (!popupRef.current) {
       document.removeEventListener('mousedown', onMouseDown)
       return
     }
     document.addEventListener('mousedown', onMouseDown)
     return () => document.removeEventListener('mousedown', onMouseDown)
-  }, [popupRef, onMouseDown])
-
-  const [show, setShow] = useState(false)
-  const [value, setValue] = useState(initalValue)
+  }, [popupRef, show])
 
   return (
     <div className={styles.container}>
