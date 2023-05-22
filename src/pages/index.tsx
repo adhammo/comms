@@ -45,6 +45,7 @@ export const Home = () => (
         width="800"
         height="450"
         allow="autoplay"
+        allowFullScreen
       ></iframe>
     </div>
   </>
