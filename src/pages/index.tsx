@@ -24,7 +24,9 @@ export const Home = () => (
       <meta name="description" content="EECE Website" />
     </Head>
     <div className={styles.intro}>
-      <Image className={styles.image} src="/department.jpg" alt="EECE Department" width={400} height={400} />
+      <div className={styles.imageContainer}>
+        <Image className={styles.image} src="/department.jpg" alt="EECE Department" width={400} height={400} />
+      </div>
       <div className={styles.container}>
         <h1 className={classNames(styles.title, raleway.className)}>comms</h1>
         <p className={classNames(styles.description, opensans.className)}>
