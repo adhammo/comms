@@ -1,0 +1,85 @@
+.intro {
+  margin: 4rem auto 0 auto;
+  max-width: 1024px;
+  display: flex;
+  align-items: center;
+}
+
+.intro .container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 4rem;
+}
+
+.intro .title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.intro .description {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.intro .author {
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 0.2rem;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--foreground);
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+  outline: none;
+  text-align: center;
+}
+
+.intro .author:hover,
+.intro .author:active,
+.intro .author:focus {
+  box-shadow: inset 0 0 0 2px var(--foreground);
+}
+
+.intro .image {
+  width: 400px;
+  border-radius: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 4px solid var(--background-variant);
+  box-shadow: 0 0 10px -4px var(--foreground-variant);
+}
+
+@media (max-width: 864px) {
+  .intro .image {
+    width: 320px;
+  }
+}
+
+@media (max-width: 764px) {
+  .intro {
+    margin: 2rem auto 0 auto;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .intro .container {
+    margin-left: 0;
+    margin-top: 2rem;
+  }
+
+  .intro .title {
+    text-align: center;
+  }
+
+  .intro .description {
+    text-align: center;
+    max-width: 35rem;
+  }
+}

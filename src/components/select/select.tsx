@@ -19,11 +19,12 @@ export declare type Option = {
 
 export declare type SelectProps = {
   header: Header
+  className: string
   options: Option[]
   onShow?: () => void
 }
 
-export const Select = ({ header, options, onShow }: SelectProps) => {
+export const Select = ({ header, className, options, onShow }: SelectProps) => {
   const showRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
   const [show, setShow] = useState(false)
@@ -55,7 +56,7 @@ export const Select = ({ header, options, onShow }: SelectProps) => {
           setShow(!show)
           onShow?.()
         }}
-        className={classNames(styles.show, {
+        className={classNames(styles.show, className, {
           [styles.active]: show,
         })}
         title={header.title}

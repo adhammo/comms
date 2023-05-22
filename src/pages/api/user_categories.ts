@@ -26,7 +26,7 @@ export default async function user_categories(req: NextApiRequest, res: NextApiR
 
   try {
     const profile = await getProfileById(user.id)
-    const categories = await (profile.role === 'owner' || profile.role === 'manager'
+    const categories = await (true /*profile.role === 'owner' || profile.role === 'manager'*/
       ? getAllCategories()
       : getUserCategories(profile.username))
     res.status(200).json({ categories })

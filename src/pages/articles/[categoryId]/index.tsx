@@ -45,11 +45,11 @@ export async function getStaticPaths(): Promise<{ paths: CategoryPath[]; fallbac
 
 export async function getStaticProps({
   params: { categoryId },
-}: CategoryPath): Promise<{ props: CategoryProps; revalidate: number }> {
+}: CategoryPath): Promise<{ props?: CategoryProps; notFound?: boolean }> {
   const category = await getCategory(categoryId)
+  if (!category.id) return { notFound: true }
   return {
     props: { category } as CategoryProps,
-    revalidate: 600,
   }
 }
 
@@ -78,7 +78,7 @@ export default function Category({ category }: CategoryProps) {
                 readTime={post.read_time}
               />
             ))
-          : '-- No articles found in this category --'}
+          : 'No articles found in this category'}
       </div>
     </>
   )

@@ -46,6 +46,7 @@ const MenuBar = ({ editor }: EditorContentProps) => {
     <div className={styles.menu}>
       <div className={styles.headings}>
         <Select
+          className={styles.menuButton}
           header={{
             title: 'Set Heading',
             iconSrc: `/icons/editor/${headingSrc}.svg`,
@@ -123,6 +124,7 @@ const MenuBar = ({ editor }: EditorContentProps) => {
       </div>
       <div className={styles.alignment}>
         <Select
+          className={styles.menuButton}
           header={{
             title: 'Set Text Alignment',
             iconSrc: `/icons/editor/${alignmentSrc}.svg`,
@@ -197,6 +199,7 @@ const MenuBar = ({ editor }: EditorContentProps) => {
       </div>
       <div className={styles.extra}>
         <Enter
+          className={styles.menuButton}
           header={{ title: 'Link', iconSrc: `/icons/editor/link.svg` }}
           placeholder={'http[s]://'}
           initalValue={editor.getAttributes('link').href ?? ''}
@@ -235,6 +238,7 @@ const MenuBar = ({ editor }: EditorContentProps) => {
           onShow={() => editor.chain().focus()}
         />
         <Enter
+          className={styles.menuButton}
           header={{ title: 'Image', iconSrc: `/icons/editor/image.svg` }}
           placeholder={'http[s]://'}
           initalValue={editor.getAttributes('image').src ?? ''}

@@ -6,7 +6,7 @@ import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
 import { getProfileById } from '@/lib/profiles'
 import { PostgrestError } from '@supabase/supabase-js'
-import { checkUserPost, livePost, updatePost } from '@/lib/posts'
+import { checkUserPost, getPostShort, livePost, updatePost } from '@/lib/posts'
 
 export declare type Post = {
   author: string
@@ -60,12 +60,16 @@ export default async function live_post(req: NextApiRequest, res: NextApiRespons
   }
 
   try {
-    const profile = await getProfileById(user.id)
-    if (!(await checkUserPost(profile.username, post))) {
+    const { username } = await getProfileById(user.id)
+    if (!(await checkUserPost(username, post))) {
       res.status(400).send('Post does not belong to this user')
       return
     }
+    const { category } = await getPostShort(post)
     await livePost(post, live === 'true')
+    await res.revalidate(`/articles/${category}`)
+    await res.revalidate(`/articles/${category}/${post}`)
+    await res.revalidate(`/authors/${username}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as PostgrestError).message)

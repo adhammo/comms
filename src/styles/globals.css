@@ -6,6 +6,7 @@
   --warning: #ffc107;
   --danger: #dc3545;
 
+  --header: #f8f9faff;
   --foreground: #212529ff;
   --foreground-variant: #969b9fff;
   --foreground-filter: invert(11%) sepia(10%) saturate(762%) hue-rotate(169deg) brightness(91%) contrast(90%);
@@ -42,6 +43,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --header: #212529ff;
     --foreground: #f8f9faff;
     --foreground-variant: #121417ff;
     --foreground-filter: invert(95%) sepia(2%) saturate(86%) hue-rotate(163deg) brightness(103%) contrast(98%);
@@ -205,9 +207,8 @@ body {
 #__next {
   width: 100%;
   min-height: 100vh;
-  padding: 0 1rem;
   display: grid;
-  grid-template-rows: 5rem 1fr 1rem;
+  grid-template-rows: 5rem 1fr 2rem;
   justify-items: center;
 }
 

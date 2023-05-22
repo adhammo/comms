@@ -20,6 +20,7 @@ export const Signin = ({setStatus}: SigninProps) => (
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: '2rem'
       }}
     >
       <Auth authType={'Sign In'} setStatus={setStatus} />

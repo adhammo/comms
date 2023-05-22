@@ -27,7 +27,7 @@ async function parser(req: NextApiRequest) {
   })
 }
 
-export default async function create_post (req: NextApiRequest, res: NextApiResponse) {
+export default async function create_post(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.status(405).send('Only POST requests allowed')
     return
@@ -69,14 +69,15 @@ export default async function create_post (req: NextApiRequest, res: NextApiResp
   }
 
   try {
-    const profile = await getProfileById(user.id)
-    if (profile.role === 'owner' || profile.role === 'manager') {
+    const { username, role } = await getProfileById(user.id)
+    // (role === 'owner' || role === 'manager')
+    if (true) {
       if (!(await checkCategory(category))) {
         res.status(400).send('No category with this id')
         return
       }
     } else {
-      if (!(await checkUserCategory(profile.username, category))) {
+      if (!(await checkUserCategory(username, category))) {
         res.status(400).send('Category is not available for this user')
         return
       }
@@ -96,8 +97,11 @@ export default async function create_post (req: NextApiRequest, res: NextApiResp
       description,
       read_time: parseInt(read_time),
       content: JSON.parse(content),
-      author: profile.username,
+      author: username,
     })
+    await res.revalidate(`/articles/${category}`)
+    await res.revalidate(`/articles/${category}/${id}`)
+    await res.revalidate(`/authors/${username}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as Error).message)

@@ -109,27 +109,46 @@ const Signup = ({ setErrorMessage, setStatus }: SignProps) => {
     else if (confirmPass === '') setErrorMessage('Please confirm your password.')
     else if (confirmPass !== password) setErrorMessage("Passwords don't match.")
 
-    supabase.auth
-      .signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username,
-            first_name: firstName,
-            last_name: lastName,
-          },
-        },
-      })
-      .then(({ error }) => {
-        if (error) {
-          if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
-            setErrorMessage('Username already exists.')
-        } else {
-          setStatus('Sign up succeeded', false)
-          router.push('/signin')
-        }
-      })
+    const formData = new FormData()
+    formData.append('username', username)
+    formData.append('first_name', firstName)
+    formData.append('last_name', lastName)
+    formData.append('email', email)
+    formData.append('password', password)
+
+    fetch('/api/signup', {
+      method: 'POST',
+      body: formData,
+    }).then(res => {
+      if (!res.ok) {
+        res.text().then(msg => setErrorMessage(msg))
+      } else {
+        setStatus('Sign up succeeded', false)
+        router.push('/signin')
+      }
+    })
+
+    // supabase.auth
+    //   .signUp({
+    //     email,
+    //     password,
+    //     options: {
+    //       data: {
+    //         username,
+    //         first_name: firstName,
+    //         last_name: lastName,
+    //       },
+    //     },
+    //   })
+    //   .then(({ error }) => {
+    //     if (error) {
+    //       if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
+    //         setErrorMessage('Username already exists.')
+    //     } else {
+    //       setStatus('Sign up succeeded', false)
+    //       router.push('/signin')
+    //     }
+    //   })
   }
 
   return (
@@ -255,7 +274,7 @@ export const Auth = ({ authType, setStatus }: AuthProps) => {
       <form className={styles.form}>
         {(authType === 'Sign In' && <Signin setErrorMessage={setErrorMessage} setStatus={setStatus} />) ||
           (authType === 'Sign Up' && <Signup setErrorMessage={setErrorMessage} setStatus={setStatus} />) ||
-          (authType === 'Forget Password' && <Signin setErrorMessage={setErrorMessage} setStatus={setStatus}/>)}
+          (authType === 'Forget Password' && <Signin setErrorMessage={setErrorMessage} setStatus={setStatus} />)}
       </form>
     </div>
   )

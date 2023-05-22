@@ -18,13 +18,14 @@ export declare type Action = {
 
 export declare type EnterProps = {
   header: Header
+  className: string
   placeholder: string
   initalValue: string
   actions: Action[]
   onShow?: () => void
 }
 
-export const Enter = ({ header, placeholder, initalValue, actions, onShow }: EnterProps) => {
+export const Enter = ({ header, className, placeholder, initalValue, actions, onShow }: EnterProps) => {
   const showRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
 
@@ -59,7 +60,7 @@ export const Enter = ({ header, placeholder, initalValue, actions, onShow }: Ent
           setShow(!show)
           onShow?.()
         }}
-        className={classNames(styles.show, {
+        className={classNames(styles.show, className, {
           [styles.active]: show,
         })}
         title={`Edit ${header.title}`}

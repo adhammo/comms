@@ -70,4 +70,17 @@
   .head {
     align-items: center;
   }
+
+  .title {
+    margin-bottom: 0.75rem;
+  }
+  
+  .info {
+    flex-direction: column;
+  }
+
+  .author {
+    margin-right: 0;
+    margin-bottom: 0.25rem;
+  }
 }

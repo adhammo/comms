@@ -14,6 +14,7 @@ export declare type Option = {
 
 export declare type SelectProps = {
   title: string
+  className: string
   options: Option[]
   onShow?: () => void
 }
@@ -28,7 +29,7 @@ const roboto = Roboto({
   weight: '400',
 })
 
-export const Select = ({ title, options, onShow }: SelectProps) => {
+export const Select = ({ title, className, options, onShow }: SelectProps) => {
   const showRef = useRef<HTMLButtonElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
   const [show, setShow] = useState(false)
@@ -52,7 +53,6 @@ export const Select = ({ title, options, onShow }: SelectProps) => {
     return () => document.removeEventListener('mousedown', onMouseDown)
   }, [popupRef, show])
 
-
   return (
     <div className={styles.container}>
       <button
@@ -61,7 +61,7 @@ export const Select = ({ title, options, onShow }: SelectProps) => {
           setShow(!show)
           onShow?.()
         }}
-        className={classNames(styles.show, roboto.className, {
+        className={classNames(styles.show, className, {
           [styles.active]: show,
         })}
         title={title}

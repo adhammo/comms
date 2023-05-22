@@ -6,7 +6,8 @@ import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
 import { getProfileById } from '@/lib/profiles'
 import { PostgrestError } from '@supabase/supabase-js'
-import { checkUserPost, updatePost } from '@/lib/posts'
+import { checkUserPost, getPostShort, updatePost } from '@/lib/posts'
+import { getPost } from '@/lib/posts'
 
 export declare type Post = {
   author: string
@@ -66,11 +67,12 @@ export default async function edit_post(req: NextApiRequest, res: NextApiRespons
   const { image } = files
 
   try {
-    const profile = await getProfileById(user.id)
-    if (!(await checkUserPost(profile.username, post))) {
+    const { username } = await getProfileById(user.id)
+    if (!(await checkUserPost(username, post))) {
       res.status(400).send('Post does not belong to this user')
       return
     }
+    const { category } = await getPostShort(post)
     if (image) {
       const { error } = await supabase.storage
         .from('images')
@@ -83,6 +85,9 @@ export default async function edit_post(req: NextApiRequest, res: NextApiRespons
       read_time: parseInt(read_time),
       content: JSON.parse(content),
     })
+    await res.revalidate(`/articles/${category}`)
+    await res.revalidate(`/articles/${category}/${post}`)
+    await res.revalidate(`/authors/${username}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as PostgrestError).message)

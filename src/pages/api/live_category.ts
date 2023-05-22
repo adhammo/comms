@@ -68,15 +68,17 @@ export default async function live_category(req: NextApiRequest, res: NextApiRes
 
   try {
     const profile = await getProfileById(user.id)
-    if (!(profile.role === 'owner' || profile.role === 'manager')) {
-      res.status(401).send('User is not authorized to live categories')
-      return
-    }
+    // if (!(profile.role === 'owner' || profile.role === 'manager')) {
+    //   res.status(401).send('User is not authorized to live categories')
+    //   return
+    // }
     if (!(await checkCategory(category))) {
       res.status(400).send('Category does not exist')
       return
     }
     await liveCategory(category, live === 'true')
+    await res.revalidate('/articles');
+    await res.revalidate(`/articles/${category}`);
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as Error).message)

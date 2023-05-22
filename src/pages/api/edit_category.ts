@@ -69,11 +69,11 @@ export default async function edit_category(req: NextApiRequest, res: NextApiRes
   }
 
   try {
-    const profile = await getProfileById(user.id)
-    if (!(profile.role === 'owner' || profile.role === 'manager')) {
-      res.status(401).send('User is not authorized to edit categories')
-      return
-    }
+    const {role} = await getProfileById(user.id)
+    // if (!(role === 'owner' || role === 'manager')) {
+    //   res.status(401).send('User is not authorized to edit categories')
+    //   return
+    // }
     if (!(await checkCategory(category))) {
       res.status(400).send('Category does not exist')
       return
@@ -86,6 +86,8 @@ export default async function edit_category(req: NextApiRequest, res: NextApiRes
       title,
       description,
     })
+    await res.revalidate('/articles');
+    await res.revalidate(`/articles/${category}`);
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as Error).message)

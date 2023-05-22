@@ -68,51 +68,51 @@ export const Layout = ({ children }: LayoutProps) => {
       </Head>
       <header className={styles.header}>
         <div className={styles.container}>
-          <Link className={styles.logo} title="Home Page" href="/">
-            <Image src="/comms.svg" alt="Comms Logo" width={20} height={20} priority />
-            <h1 className={classNames(styles.title, raleway.className)}>comms</h1>
-          </Link>
-          <nav className={styles.nav}>
-            <ul className={styles.list}>
-              {navigables.map(navigable => (
-                <li key={navigable.name} className={styles.item}>
-                  <Link
-                    className={classNames(styles.link, opensans.className)}
-                    title={`${navigable.name} Page`}
-                    href={navigable.path}
-                  >
-                    {navigable.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-        <div className={styles.actions}>
-          <Link className={classNames(styles.author, opensans.className)} title="Author Articles" href="/author">
-            Author
-          </Link>
-          <button className={styles.menu} title="Open Sidebar" onClick={!sidebar ? openSidebar : undefined}>
-            <MenuIcon className={styles.icon} />
-          </button>
+          <div className={styles.navigation}>
+            <Link className={styles.logo} title="Home Page" href="/">
+              <Image src="/comms.svg" alt="Comms Logo" width={20} height={20} priority />
+              <h1 className={classNames(styles.title, raleway.className)}>comms</h1>
+            </Link>
+            <nav className={styles.nav}>
+              <ul className={styles.list}>
+                {navigables.map(navigable => (
+                  <li key={navigable.name} className={styles.item}>
+                    <Link
+                      className={classNames(styles.link, opensans.className)}
+                      title={`${navigable.name} Page`}
+                      href={navigable.path}
+                    >
+                      {navigable.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+          <div className={styles.actions}>
+            <Link className={classNames(styles.author, opensans.className)} title="Author Articles" href="/author">
+              Author
+            </Link>
+            <button
+              className={classNames(styles.menu, { [styles.close]: sidebar })}
+              title={`${sidebar ? 'Close' : 'Open'} Sidebar`}
+              onClick={sidebar ? closeSidebar : openSidebar}
+            >
+              {sidebar ? (
+                <Image src="/icons/editor/close.svg" alt="Close" width={32} height={32} priority />
+              ) : (
+                <MenuIcon className={styles.icon} />
+              )}
+            </button>
+          </div>
         </div>
       </header>
-
       <main className={classNames(styles.main, { [styles.hide]: sidebar })}>
         {children((message, error) => SetStatus({ show: true, message, error }))}
       </main>
       <footer className={styles.footer}></footer>
       {isMobile && (
         <div className={classNames(styles.sidebar, { [styles.hide]: !sidebar })}>
-          <div className={styles.head}>
-            <Link className={styles.logo} title="Home Page" href="/">
-              <Image src="/comms.svg" alt="Comms Logo" width={20} height={20} priority />
-              <h1 className={classNames(styles.title, raleway.className)}>comms</h1>
-            </Link>
-            <button className={styles.menu} title="Close Sidebar" onClick={sidebar ? closeSidebar : undefined}>
-              <Image src="/icons/editor/close.svg" alt="Close" width={32} height={32} priority />
-            </button>
-          </div>
           <nav className={styles.nav}>
             <ul className={styles.list}>
               {navigables.map(navigable => (
@@ -121,6 +121,7 @@ export const Layout = ({ children }: LayoutProps) => {
                     className={classNames(styles.link, opensans.className)}
                     title={`${navigable.name} Page`}
                     href={navigable.path}
+                    onClick={sidebar ? closeSidebar : undefined}
                   >
                     {navigable.name}
                   </Link>

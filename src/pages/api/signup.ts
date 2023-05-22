@@ -1,36 +1,91 @@
-// import { NextApiRequest, NextApiResponse } from 'next'
+import fs from 'fs'
+import multiparty from 'multiparty'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { Database, Json } from '@/lib/database'
+import supabase from '@/lib/client'
+import { createProfile, getProfileById, updateProfile } from '@/lib/profiles'
+import { PostgrestError } from '@supabase/supabase-js'
+import path from 'path'
 
-// import { checkUserExists, signUp } from '@/lib/auth'
+export declare type Post = {
+  author: string
+  category: string
+  content: Json
+  description: string
+  id: string
+  read_time: number
+  title: string
+}
 
-// declare type User = {
-//   username: string
-//   first_name: string
-//   last_name: string
-//   email: string
-//   password: string
-// }
+async function parser(req: NextApiRequest) {
+  return new Promise((resolve, reject) => {
+    var form = new multiparty.Form()
+    form.parse(req, function (err, fields, files) {
+      if (err) throw reject(err)
+      else resolve({ fields, files })
+    })
+  })
+}
 
-// declare type SignError = { code: number; message: string }
+export default async function signup(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.status(405).send('Only POST requests allowed')
+    return
+  }
 
-// const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-//   if (req.method !== 'POST') {
-//     res.status(405).send('Only POST requests allowed')
-//     return
-//   }
+  const { fields: fieldsMulti }: any = await parser(req)
+  const fields = Object.entries(fieldsMulti).reduce(
+    (fields: any, field: [string, any]) => ({ ...fields, [field[0]]: field[1][0] }),
+    {}
+  )
 
-//   console.log(req.body)
+  const { username, first_name, last_name, email, password } = fields
+  if (!username || !first_name || !last_name || !email || !password) {
+    res.status(400).send('Missing user data')
+    return
+  }
 
-//   const { username, first_name, last_name, email, password }: User = req.body
+  try {
+    const { error } = await supabase.storage
+      .from('images')
+      .upload(`/profiles/${username}.jpg`, fs.readFileSync(path.join(process.cwd(), 'public/default.jpg')), {
+        upsert: true,
+        contentType: 'image/jpg',
+      })
+    if (error) throw error
+    const {
+      data: { user },
+      error: signError,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          first_name,
+          last_name,
+        },
+      },
+    })
+    if (signError) {
+      if (signError.message === 'duplicate key value violates unique constraint "profiles_pkey"')
+        throw { message: 'Username already exists' }
+      throw signError
+    }
+    if (!user) {
+      throw { message: 'No user created' }
+    }
+    await createProfile({ id: user.id, username, first_name, last_name })
+    await res.revalidate(`/authors/${username}`)
+    res.status(200).send('Success')
+  } catch (error) {
+    res.status(500).send((error as PostgrestError).message)
+  }
+}
 
-//   try {
-//     if (await checkUserExists(username, email))
-//       throw { code: 400, message: 'There exists a user with this username or email' }
-//     await signUp(username, email, password, first_name, last_name)
-//     res.status(200)
-//   } catch (err) {
-//     const error = err as SignError
-//     res.status(error.code).json({ message: error.message })
-//   }
-// }
-
-// export default handler
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}

@@ -47,11 +47,11 @@ export async function getStaticPaths(): Promise<{ paths: PostPath[]; fallback: s
 
 export async function getStaticProps({
   params: { postId },
-}: PostPath): Promise<{ props: PostProps; revalidate: number }> {
+}: PostPath): Promise<{ props?: PostProps; notFound?: boolean }> {
   const post = await getPost(postId)
+  if (!post) return { notFound: true }
   return {
     props: { post } as PostProps,
-    revalidate: 600,
   }
 }
 

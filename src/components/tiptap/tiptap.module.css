@@ -1,7 +1,7 @@
 .tiptap {
   position: relative;
   width: 100%;
-  height: calc(100vh - 9rem);
+  height: calc(100vh - 10rem);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -305,10 +305,41 @@
 }
 
 .content img {
-  max-width: 50%;
-  max-height: 30rem;
+  max-width: 75%;
+  max-height: 20rem;
   margin: 0 auto;
   margin-bottom: 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 0 10px -4px var(--foreground-variant);
+}
+
+@media (max-width: 600px) {
+  .tiptap {
+    height: 30rem;
+  }
+
+  .tiptap.viewer {
+    height: inherit;
+  }
+
+  .menu > * {
+    margin-left: 0.2rem;
+  }
+
+  .menuButton {
+    scale: 0.8;
+  }
+
+  .float .menuButton {
+    scale: 1;
+  }
+
+  .content img {
+    max-width: 100%;
+    max-height: 20rem;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 10px -4px var(--foreground-variant);
+  }
 }

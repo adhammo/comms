@@ -49,12 +49,12 @@ export async function getStaticPaths(): Promise<{ paths: AuthorPath[]; fallback:
 
 export async function getStaticProps({
   params: { username },
-}: AuthorPath): Promise<{ props: AuthorProps; revalidate: number }> {
+}: AuthorPath): Promise<{ props?: AuthorProps; notFound?: boolean }> {
   const profile = await getProfile(username)
+  if (!profile) return { notFound: true }
   const posts = await getUserPosts(profile.username)
   return {
     props: { profile, posts } as AuthorProps,
-    revalidate: 600,
   }
 }
 
@@ -93,7 +93,7 @@ export default function Author({ profile, posts }: AuthorProps) {
                 readTime={post.read_time}
               />
             ))
-          : '-- No articles found for this user --'}
+          : 'No articles found for this user'}
       </div>
     </>
   )

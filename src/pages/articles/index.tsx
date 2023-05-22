@@ -25,11 +25,10 @@ export declare type CategoriesProps = {
   }[]
 }
 
-export async function getStaticProps(): Promise<{ props: CategoriesProps, revalidate: number }> {
+export async function getStaticProps(): Promise<{ props: CategoriesProps }> {
   const categories = await getAllLiveCategories()
   return {
     props: { categories },
-    revalidate: 600,
   }
 }
 
@@ -54,7 +53,7 @@ export default function Categories({ categories }: CategoriesProps) {
                 description={category.description}
               />
             ))
-          : '-- No categories found --'}
+          : 'No categories found'}
       </div>
     </>
   )

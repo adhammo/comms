@@ -118,6 +118,7 @@
 @media (max-width: 600px) {
   .card {
     margin: 0 auto;
+    width: 100%;
     max-width: 20rem;
     box-sizing: content-box;
     background-color: var(--background-variant);

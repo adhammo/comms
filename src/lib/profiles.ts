@@ -41,6 +41,18 @@ export async function getProfileById(userId: string) {
   return profiles[0]
 }
 
+export async function createProfile(
+  profile: {
+    id: any
+    username: any
+    first_name: any
+    last_name: any
+  }
+) {
+  const { error } = await supabase.from('profiles').insert([profile])
+  if (error) throw error
+}
+
 export async function updateProfile(
   username: string,
   profile: {

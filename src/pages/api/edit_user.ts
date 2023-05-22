@@ -58,28 +58,29 @@ export default async function edit_user(req: NextApiRequest, res: NextApiRespons
 
   const { first_name, last_name, bio } = fields
   if (!first_name || !last_name || !bio) {
-    res.status(400).send('Missing post data')
+    res.status(400).send('Missing user data')
     return
   }
 
   const { image } = files
 
   try {
-    const profile = await getProfileById(user.id)
+    const { username } = await getProfileById(user.id)
     if (image) {
       const { error } = await supabase.storage
         .from('images')
-        .upload(`/profiles/${profile.username}.jpg`, fs.readFileSync(image.path), {
+        .upload(`/profiles/${username}.jpg`, fs.readFileSync(image.path), {
           upsert: true,
           contentType: 'image/jpg',
         })
       if (error) throw error
     }
-    await updateProfile(profile.username, {
+    await updateProfile(username, {
       first_name,
       last_name,
       bio,
     })
+    await res.revalidate(`/authors/${username}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as PostgrestError).message)

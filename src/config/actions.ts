@@ -554,7 +554,7 @@ const userActions: Action[] = [
 export const actions: { [name: string]: Action[] } = {
   owner: [...authorActions, ...managerActions, ...userActions],
   manager: [...authorActions, ...managerActions, ...userActions],
-  author: [...authorActions, ...userActions],
+  author: [...authorActions, ...managerActions, ...userActions],
 }
 
 export default actions

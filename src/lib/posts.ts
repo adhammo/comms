@@ -51,6 +51,15 @@ export async function getPost(postId: string) {
   return posts[0]
 }
 
+export async function getPostShort(postId: string) {
+  const { data: posts, error } = await supabase
+    .from('posts')
+    .select('id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time')
+    .eq('id', postId)
+  if (error) throw error
+  return posts[0]
+}
+
 export async function checkPost(postId: string) {
   const { data: posts, error } = await supabase.from('posts').select('id').eq('id', postId)
   if (error) throw error

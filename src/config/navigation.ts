@@ -5,6 +5,6 @@ export declare type Navigable = {
 
 export const navigables: Navigable[] = [
   { name: 'Articles', path: '/articles' },
-  // { name: 'Courses', path: '/courses' },
+  { name: 'Links', path: '/links' },
   // { name: 'Projects', path: '/projects' },
 ]

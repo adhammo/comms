@@ -69,11 +69,11 @@ export default async function create_category(req: NextApiRequest, res: NextApiR
   }
 
   try {
-    const profile = await getProfileById(user.id)
-    if (!(profile.role === 'owner' || profile.role === 'manager')) {
-      res.status(401).send('User is not authorized to create categories')
-      return
-    }
+    const { role } = await getProfileById(user.id)
+    // if (!(role === 'owner' || role === 'manager')) {
+    //   res.status(401).send('User is not authorized to create categories')
+    //   return
+    // }
     if (await checkCategory(id)) {
       res.status(400).send('Category with same Id already exists')
       return
@@ -87,6 +87,8 @@ export default async function create_category(req: NextApiRequest, res: NextApiR
       title,
       description,
     })
+    await res.revalidate('/articles')
+    await res.revalidate(`/articles/${id}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as Error).message)

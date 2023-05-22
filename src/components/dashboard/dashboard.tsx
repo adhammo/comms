@@ -183,6 +183,7 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
                       case 'drop':
                         return (
                           <Dropdown
+                            className={classNames(styles.input, roboto.className)}
                             title={field.label}
                             options={props[field.id].map((option: { label: string; value: string }) => ({
                               active: fields[field.id] === option.value,
@@ -339,7 +340,7 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
   }
 }
 
-export default function DashboardWrapper ({
+export default function DashboardWrapper({
   username,
   role,
   setStatus,
