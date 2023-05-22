@@ -49,6 +49,7 @@
 .intro .imageContainer {
   width: 400px;
   height: 400px;
+  aspect-ratio: 1/1;
 }
 
 .intro .image {
