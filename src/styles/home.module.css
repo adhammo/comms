@@ -61,10 +61,39 @@
   box-shadow: 0 0 10px -4px var(--foreground-variant);
 }
 
+.learn {
+  margin: 4rem auto 2rem auto;
+  max-width: 1024px;
+  border-top: 2px solid var(--background-variant);
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.learn .title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.learn .video {
+  border-radius: 0.25rem;
+  box-shadow: 0 0 10px -4px var(--foreground-variant);
+  width: 800px;
+  height: 450px;
+}
+
 @media (max-width: 864px) {
   .intro .imageContainer {
     width: 320px;
     height: 320px;
+  }
+
+  .learn .video {
+    width: 608px;
+    height: 342px;
   }
 }
 
@@ -87,5 +116,10 @@
   .intro .description {
     text-align: center;
     max-width: 35rem;
+  }
+
+  .learn .video {
+    width: 386px;
+    height: 207px;
   }
 }

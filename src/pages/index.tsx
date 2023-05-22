@@ -37,6 +37,16 @@ export const Home = () => (
         </Link>
       </div>
     </div>
+    <div className={styles.learn}>
+      <h2 className={classNames(styles.title, raleway.className)}>How it works?</h2>
+      <iframe
+        className={styles.video}
+        src="https://drive.google.com/file/d/1leTrFCeSrEP8f32RUktVtCedwhjKY5o1/preview"
+        width="800"
+        height="450"
+        allow="autoplay"
+      ></iframe>
+    </div>
   </>
 )
 
