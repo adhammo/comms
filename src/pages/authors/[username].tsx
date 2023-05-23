@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import { getAllLiveProfiles, getProfile } from '@/lib/profiles'
 import getImageSrc from '@/lib/storage'
 import { getUserPosts } from '@/lib/posts'
+import Image from 'next/image'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,10 +28,11 @@ export declare type AuthorProps = {
     last_name: string
     role: string
     bio: string
+    picture: boolean
   }
   posts: {
     id: string
-    profiles: { username: string; first_name: string; last_name: string }
+    profiles: { username: string; first_name: string; last_name: string; picture: boolean }
     category: string
     created_at: string
     title: string
@@ -66,13 +68,24 @@ export default function Author({ profile, posts }: AuthorProps) {
         <meta name="description" content={`${profile.first_name} ${profile.last_name} Author Info`} />
       </Head>
       <div className={styles.author}>
-        <img
-          className={styles.image}
-          src={getImageSrc(`/profiles/${profile.username}.jpg`)}
-          alt={`${profile.first_name} Image`}
-          width={200}
-          height={200}
-        />
+        {profile.picture ? (
+          <img
+            className={styles.image}
+            src={getImageSrc(`/profiles/${profile.username}.jpg`)}
+            alt={`${profile.first_name} Image`}
+            width={200}
+            height={200}
+          />
+        ) : (
+          <Image
+            className={styles.image}
+            src={'/default.jpg'}
+            alt={`${profile.first_name} Image`}
+            width={200}
+            height={200}
+          />
+        )}
+
         <h1 className={classNames(styles.name, inter.className)}>{`${profile.first_name} ${profile.last_name}`}</h1>
         <p className={classNames(styles.bio, roboto.className)}>{profile.bio}</p>
       </div>
