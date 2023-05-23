@@ -10,6 +10,7 @@ import getImageSrc from '@/lib/storage'
 import { getProfileById } from '@/lib/profiles'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,6 +28,7 @@ declare type User = {
   last_name: string
   role: string
   bio: string
+  picture: boolean
 }
 
 declare type AuthorProps = {
@@ -57,7 +59,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-export const Author = ({ user: { username, first_name, last_name, bio, role }, setStatus }: AuthorProps) => {
+export const Author = ({ user: { username, first_name, last_name, bio, role, picture }, setStatus }: AuthorProps) => {
   const router = useRouter()
   const supabase = useSupabaseClient()
   return (
@@ -67,13 +69,17 @@ export const Author = ({ user: { username, first_name, last_name, bio, role }, s
         <meta name="description" content="Manage and author articles" />
       </Head>
       <div className={styles.author}>
-        <img
-          className={styles.image}
-          src={getImageSrc(`/profiles/${username}.jpg`)}
-          alt={`${first_name} Image`}
-          width={200}
-          height={200}
-        />
+        {picture ? (
+          <img
+            className={styles.image}
+            src={getImageSrc(`/profiles/${username}.jpg`)}
+            alt={`${first_name} Image`}
+            width={200}
+            height={200}
+          />
+        ) : (
+          <Image className={styles.image} src={'/default.jpg'} alt={`${first_name} Image`} width={200} height={200} />
+        )}
         <h1 className={classNames(styles.name, inter.className)}>{`${first_name} ${last_name}`}</h1>
         <div className={styles.signoutContainer}>
           <button

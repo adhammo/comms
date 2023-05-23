@@ -85,7 +85,6 @@ export default function Author({ profile, posts }: AuthorProps) {
             height={200}
           />
         )}
-
         <h1 className={classNames(styles.name, inter.className)}>{`${profile.first_name} ${profile.last_name}`}</h1>
         <p className={classNames(styles.bio, roboto.className)}>{profile.bio}</p>
       </div>
