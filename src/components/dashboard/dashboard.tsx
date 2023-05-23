@@ -216,10 +216,7 @@ export class Dashboard extends Component<DashboardProps, DashboardState> {
                           />
                         )
                       case 'image':
-                        const getFileName = (filename: string) =>
-                          filename.length > 22
-                            ? filename.substring(0, 11) + '...' + filename.substring(filename.length - 11)
-                            : filename
+                        const getFileName = (filename: string) => filename.replace(/^.*[\\\/]/, '')
                         return (
                           <>
                             <label className={classNames(styles.imageLabel, roboto.className)} title={field.label}>
