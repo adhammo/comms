@@ -21,19 +21,20 @@ const Signin = ({ setErrorMessage, setStatus }: SignProps) => {
     else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
       setErrorMessage('Please enter a valid email address.')
     else if (password === '') setErrorMessage('Please enter your password.')
-
-    supabase.auth
-      .signInWithPassword({
-        email,
-        password,
-      })
-      .then(({ error }) => {
-        if (error) setErrorMessage('Incorrect email or password.')
-        else {
-          setStatus('Sign in succeeded', false)
-          router.push('/author')
-        }
-      })
+    else {
+      supabase.auth
+        .signInWithPassword({
+          email,
+          password,
+        })
+        .then(({ error }) => {
+          if (error) setErrorMessage('Incorrect email or password.')
+          else {
+            setStatus('Sign in succeeded', false)
+            router.push('/author')
+          }
+        })
+    }
   }
 
   return (
@@ -108,47 +109,30 @@ const Signup = ({ setErrorMessage, setStatus }: SignProps) => {
     else if (password === '') setErrorMessage('Please enter your password.')
     else if (confirmPass === '') setErrorMessage('Please confirm your password.')
     else if (confirmPass !== password) setErrorMessage("Passwords don't match.")
-
-    const formData = new FormData()
-    formData.append('username', username)
-    formData.append('first_name', firstName)
-    formData.append('last_name', lastName)
-    formData.append('email', email)
-    formData.append('password', password)
-
-    fetch('/api/signup', {
-      method: 'POST',
-      body: formData,
-    }).then(res => {
-      if (!res.ok) {
-        res.text().then(msg => setErrorMessage(msg))
-      } else {
-        setStatus('Sign up succeeded', false)
-        router.push('/signin')
-      }
-    })
-
-    // supabase.auth
-    //   .signUp({
-    //     email,
-    //     password,
-    //     options: {
-    //       data: {
-    //         username,
-    //         first_name: firstName,
-    //         last_name: lastName,
-    //       },
-    //     },
-    //   })
-    //   .then(({ error }) => {
-    //     if (error) {
-    //       if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
-    //         setErrorMessage('Username already exists.')
-    //     } else {
-    //       setStatus('Sign up succeeded', false)
-    //       router.push('/signin')
-    //     }
-    //   })
+    else {
+      supabase.auth
+        .signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username,
+              first_name: firstName,
+              last_name: lastName,
+            },
+          },
+        })
+        .then(({ error }) => {
+          if (error) {
+            if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
+              setErrorMessage('Username already exists.')
+            else setErrorMessage(error.message)
+          } else {
+            setStatus('Sign up succeeded', false)
+            router.push('/signin')
+          }
+        })
+    }
   }
 
   return (

@@ -11,6 +11,7 @@ import { getProfileById } from '@/lib/profiles'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import { useEffect } from 'react'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -62,6 +63,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 export const Author = ({ user: { username, first_name, last_name, bio, role, picture }, setStatus }: AuthorProps) => {
   const router = useRouter()
   const supabase = useSupabaseClient()
+
+  useEffect(() => {
+    if (window.innerWidth <= 700) setStatus('For better editing experience, please use PC or Tablet', true)
+  }, [])
+
   return (
     <>
       <Head>
