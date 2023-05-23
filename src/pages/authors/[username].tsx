@@ -53,7 +53,7 @@ export async function getStaticProps({
   params: { username },
 }: AuthorPath): Promise<{ props?: AuthorProps; notFound?: boolean }> {
   const profile = await getProfile(username)
-  if (!profile || profile.live) return { notFound: true }
+  if (!profile || !profile.live) return { notFound: true }
   const posts = await getUserPosts(profile.username)
   return {
     props: { profile, posts } as AuthorProps,
