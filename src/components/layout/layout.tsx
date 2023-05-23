@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -26,6 +26,8 @@ const opensans = Open_Sans({
 
 export const Layout = ({ children }: LayoutProps) => {
   const router = useRouter()
+  const headerRef = useRef<HTMLDivElement>(null)
+  const sidebarRef = useRef<HTMLDivElement>(null)
   const [status, SetStatus] = useState({ show: false, message: '', error: false })
   const [sidebar, SetSidebar] = useState(false)
   const openSidebar = () => SetSidebar(true)
@@ -48,6 +50,17 @@ export const Layout = ({ children }: LayoutProps) => {
   }, [])
 
   useEffect(() => {
+    const onMouseDown = (ev: MouseEvent) => {
+      if (!sidebar) return
+      if (!headerRef.current?.contains(ev.target as Node) && !sidebarRef.current?.contains(ev.target as Node)) {
+        closeSidebar()
+      }
+    }
+    document.addEventListener('mousedown', onMouseDown)
+    return () => document.removeEventListener('mousedown', onMouseDown)
+  }, [sidebar])
+
+  useEffect(() => {
     closeSidebar()
   }, [router.pathname])
 
@@ -66,7 +79,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className={styles.header}>
+      <header className={styles.header} ref={headerRef}>
         <div className={styles.container}>
           <div className={styles.navigation}>
             <Link className={styles.logo} title="Home Page" href="/">
@@ -107,12 +120,10 @@ export const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
       </header>
-      <main className={classNames(styles.main, { [styles.hide]: sidebar })}>
-        {children((message, error) => SetStatus({ show: true, message, error }))}
-      </main>
+      <main className={styles.main}>{children((message, error) => SetStatus({ show: true, message, error }))}</main>
       <footer className={styles.footer}></footer>
       {isMobile && (
-        <div className={classNames(styles.sidebar, { [styles.hide]: !sidebar })}>
+        <div className={classNames(styles.sidebar, { [styles.hide]: !sidebar })} ref={sidebarRef}>
           <nav className={styles.nav}>
             <ul className={styles.list}>
               {navigables.map(navigable => (
