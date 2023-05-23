@@ -26,7 +26,7 @@ export declare type CategoryProps = {
     description: string
     posts: {
       id: string
-      profiles: { username: string; first_name: string; last_name: string }
+      profiles: { username: string; first_name: string; last_name: string; picture: boolean }
       created_at: string
       title: string
       description: string
