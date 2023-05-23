@@ -54,7 +54,7 @@ export async function getPost(postId: string) {
 export async function getPostShort(postId: string) {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time')
+    .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time, live')
     .eq('id', postId)
   if (error) throw error
   return posts[0]

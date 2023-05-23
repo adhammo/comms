@@ -50,7 +50,7 @@ export async function getStaticProps({
   params: { postId },
 }: PostPath): Promise<{ props?: PostProps; notFound?: boolean }> {
   const post = await getPost(postId)
-  if (!post) return { notFound: true }
+  if (!post || !post.live) return { notFound: true }
   return {
     props: { post } as PostProps,
   }

@@ -20,7 +20,7 @@ export async function getAllProfiles() {
 export async function getProfile(username: string) {
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('id, username, first_name, last_name, role, bio, picture')
+    .select('id, username, first_name, last_name, role, bio, picture, live')
     .eq('username', username)
   if (error) throw error
   return profiles[0]
@@ -35,7 +35,7 @@ export async function checkProfile(username: string) {
 export async function getProfileById(userId: string) {
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('username, first_name, last_name, role, bio, picture')
+    .select('username, first_name, last_name, role, bio, picture, live')
     .eq('id', userId)
   if (error) throw error
   return profiles[0]
@@ -63,5 +63,11 @@ export async function updateProfile(
   }
 ) {
   const { error } = await supabase.from('profiles').update(profile).eq('username', username)
+  if (error) throw error
+}
+
+
+export async function liveProfile(username: string, live: boolean) {
+  const { error } = await supabase.from('profiles').update({ live }).eq('username', username)
   if (error) throw error
 }

@@ -47,7 +47,7 @@ export async function getStaticProps({
   params: { categoryId },
 }: CategoryPath): Promise<{ props?: CategoryProps; notFound?: boolean }> {
   const category = await getCategory(categoryId)
-  if (!category.id) return { notFound: true }
+  if (!category.id || !category.live) return { notFound: true }
   return {
     props: { category } as CategoryProps,
   }

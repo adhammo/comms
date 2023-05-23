@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
-import { getProfileById, updateProfile } from '@/lib/profiles'
+import { getProfileById, liveProfile, updateProfile } from '@/lib/profiles'
 import { PostgrestError } from '@supabase/supabase-js'
 import { getUserPosts } from '@/lib/posts'
 
@@ -66,7 +66,7 @@ export default async function edit_user(req: NextApiRequest, res: NextApiRespons
   const { image } = files
 
   try {
-    const { username, picture } = await getProfileById(user.id)
+    const { username, picture, live } = await getProfileById(user.id)
     const posts = await getUserPosts(username)
     if (image) {
       const { error } = await supabase.storage
@@ -83,6 +83,7 @@ export default async function edit_user(req: NextApiRequest, res: NextApiRespons
       bio,
       picture: !picture && image ? true : undefined,
     })
+    if (!live) await liveProfile(username, true)
     await res.revalidate(`/authors/${username}`)
     posts
       .reduce((categories: string[], post) => [...categories, post.category], [])

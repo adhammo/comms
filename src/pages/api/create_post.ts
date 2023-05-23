@@ -4,8 +4,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
-import { getProfileById } from '@/lib/profiles'
+import { getProfileById, liveProfile } from '@/lib/profiles'
 import { checkCategory, checkPost, checkUserCategory, createPost } from '@/lib/posts'
+import { profile } from 'console'
 
 export declare type Post = {
   author: string
@@ -69,7 +70,7 @@ export default async function create_post(req: NextApiRequest, res: NextApiRespo
   }
 
   try {
-    const { username, role } = await getProfileById(user.id)
+    const { username, live, role } = await getProfileById(user.id)
     // (role === 'owner' || role === 'manager')
     if (true) {
       if (!(await checkCategory(category))) {
@@ -99,6 +100,7 @@ export default async function create_post(req: NextApiRequest, res: NextApiRespo
       content: JSON.parse(content),
       author: username,
     })
+    if (!live) await liveProfile(username, true)
     await res.revalidate(`/articles/${category}`)
     await res.revalidate(`/articles/${category}/${id}`)
     await res.revalidate(`/authors/${username}`)

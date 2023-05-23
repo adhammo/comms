@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database, Json } from '@/lib/database'
 import supabase from '@/lib/client'
-import { getProfileById } from '@/lib/profiles'
+import { getProfileById, liveProfile } from '@/lib/profiles'
 import { PostgrestError } from '@supabase/supabase-js'
 import { checkUserPost, getPostShort, updatePost } from '@/lib/posts'
 import { getPost } from '@/lib/posts'
@@ -67,7 +67,7 @@ export default async function edit_post(req: NextApiRequest, res: NextApiRespons
   const { image } = files
 
   try {
-    const { username } = await getProfileById(user.id)
+    const { username, live } = await getProfileById(user.id)
     if (!(await checkUserPost(username, post))) {
       res.status(400).send('Post does not belong to this user')
       return
@@ -85,6 +85,7 @@ export default async function edit_post(req: NextApiRequest, res: NextApiRespons
       read_time: parseInt(read_time),
       content: JSON.parse(content),
     })
+    if (!live) await liveProfile(username, true)
     await res.revalidate(`/articles/${category}`)
     await res.revalidate(`/articles/${category}/${post}`)
     await res.revalidate(`/authors/${username}`)
