@@ -120,6 +120,16 @@
 }
 
 @media (max-width: 648px) {
+  .intro .description {
+    font-size: 1.4rem;
+  }
+
+  .intro .author {
+    padding: 1rem 1.5rem;
+    margin: 0 auto;
+    font-size: 1.2rem;
+  }
+
   .learn .video {
     width: 386px;
     height: 207px;

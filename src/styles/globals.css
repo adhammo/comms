@@ -1,5 +1,6 @@
 :root {
   --light: #f8f9fa;
+  --light-filter: invert(87%) sepia(44%) saturate(5%) hue-rotate(166deg) brightness(103%) contrast(99%);
   --dark: #212529;
   --success: #198754;
   --info: #0dcaf0;
@@ -12,7 +13,6 @@
   --foreground-filter: invert(11%) sepia(10%) saturate(762%) hue-rotate(169deg) brightness(91%) contrast(90%);
   --background: #f8f9faff;
   --background-highlight: #d8d8d8ff;
-  --background-variant: #eff1f3ff;
   --background-variant: #eaebec;
   --background-select: rgb(220, 222, 224);
   --shadow: #21252938;

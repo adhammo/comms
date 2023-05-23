@@ -11,6 +11,7 @@ import { Json } from '@/lib/database'
 import { getDateString } from '@/utility/dates'
 import getImageSrc from '@/lib/storage'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,7 +28,7 @@ export declare type PostPath = { params: { categoryId: string; postId: string } 
 export declare type PostProps = {
   post: {
     id: string
-    profiles: { username: string; first_name: string; last_name: string }
+    profiles: { username: string; first_name: string; last_name: string; picture: boolean }
     category: string
     created_at: string
     title: string
@@ -70,13 +71,23 @@ export default function Post({ post }: PostProps) {
             href={`/authors/${post.profiles.username}`}
             title={`${post.profiles.first_name} ${post.profiles.last_name} Author`}
           >
-            <img
-              className={styles.authorImage}
-              src={getImageSrc(`/profiles/${post.profiles.username}.jpg`)}
-              alt={`${post.profiles.first_name} Image`}
-              width={32}
-              height={32}
-            />
+            {post.profiles.picture ? (
+              <img
+                className={styles.authorImage}
+                src={getImageSrc(`/profiles/${post.profiles.username}.jpg`)}
+                alt={`${post.profiles.first_name} Image`}
+                width={32}
+                height={32}
+              />
+            ) : (
+              <Image
+                className={styles.authorImage}
+                src={'/default.jpg'}
+                alt={`${post.profiles.first_name} Image`}
+                width={32}
+                height={32}
+              />
+            )}
             <p
               className={classNames(styles.name, inter.className)}
             >{`${post.profiles.first_name} ${post.profiles.last_name}`}</p>

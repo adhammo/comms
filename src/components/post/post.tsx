@@ -6,6 +6,7 @@ import classNames from 'classnames'
 
 import getImageSrc from '@/lib/storage'
 import { getDateString } from '@/utility/dates'
+import Image from 'next/image'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,7 +24,7 @@ export declare type PostProps = {
   description: string
   createdAt: string
   category: string
-  profiles: { username: string; first_name: string; last_name: string }
+  profiles: { username: string; first_name: string; last_name: string; picture: boolean }
   readTime: number
 }
 
@@ -43,13 +44,23 @@ export const Post = ({ id, title, description, createdAt, category, profiles, re
         <h2 className={classNames(styles.title, inter.className)}>{title}</h2>
         <p className={classNames(styles.description, roboto.className)}>{description}</p>
         <div className={styles.author}>
-          <img
-            className={styles.authorImage}
-            src={getImageSrc(`/profiles/${profiles.username}.jpg`)}
-            alt={`${profiles.first_name} Image`}
-            width={32}
-            height={32}
-          />
+          {profiles.picture ? (
+            <img
+              className={styles.authorImage}
+              src={getImageSrc(`/profiles/${profiles.username}.jpg`)}
+              alt={`${profiles.first_name} Image`}
+              width={32}
+              height={32}
+            />
+          ) : (
+            <Image
+              className={styles.authorImage}
+              src={'/default.jpg'}
+              alt={`${profiles.first_name} Image`}
+              width={32}
+              height={32}
+            />
+          )}
           <p className={classNames(styles.name, inter.className)}>{`${profiles.first_name} ${profiles.last_name}`}</p>
         </div>
         <p className={classNames(styles.time, roboto.className)}>

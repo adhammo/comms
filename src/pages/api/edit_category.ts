@@ -63,13 +63,9 @@ export default async function edit_category(req: NextApiRequest, res: NextApiRes
   }
 
   const { image } = files
-  if (!image) {
-    res.status(400).send('Missing category data')
-    return
-  }
 
   try {
-    const {role} = await getProfileById(user.id)
+    const { role } = await getProfileById(user.id)
     // if (!(role === 'owner' || role === 'manager')) {
     //   res.status(401).send('User is not authorized to edit categories')
     //   return
@@ -78,16 +74,18 @@ export default async function edit_category(req: NextApiRequest, res: NextApiRes
       res.status(400).send('Category does not exist')
       return
     }
-    const { error } = await supabase.storage
-      .from('images')
-      .upload(`/categories/${category}.jpg`, fs.readFileSync(image.path), { upsert: true, contentType: 'image/jpg' })
-    if (error) throw error
+    if (image) {
+      const { error } = await supabase.storage
+        .from('images')
+        .upload(`/categories/${category}.jpg`, fs.readFileSync(image.path), { upsert: true, contentType: 'image/jpg' })
+      if (error) throw error
+    }
     await updateCategory(category, {
       title,
       description,
     })
-    await res.revalidate('/articles');
-    await res.revalidate(`/articles/${category}`);
+    await res.revalidate('/articles')
+    await res.revalidate(`/articles/${category}`)
     res.status(200).send('Success')
   } catch (error) {
     res.status(500).send((error as Error).message)

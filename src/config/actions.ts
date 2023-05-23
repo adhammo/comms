@@ -73,7 +73,7 @@ const authorActions: Action[] = [
       },
       { id: 'title', type: 'text', label: 'Title' },
       { id: 'description', type: 'textarea', label: 'Description' },
-      { id: 'read_time', type: 'number', label: 'Read Time', description: 'How long is the post in minutes' },
+      { id: 'read_time', type: 'number', label: 'Read Time', description: 'How long is the article in minutes' },
       {
         id: 'image',
         type: 'image',
@@ -179,7 +179,7 @@ const authorActions: Action[] = [
         return { error: text }
       }
       const { posts } = await res.json()
-      if (posts.length === 0) return { error: 'You have no posts' }
+      if (posts.length === 0) return { error: 'You have no articles' }
       return {
         post: [posts.map((post: any) => ({ ...post, value: post.id, label: post.title })), posts[0].id],
         title: posts[0].title,
@@ -190,10 +190,10 @@ const authorActions: Action[] = [
       }
     },
     fields: [
-      { id: 'post', type: 'drop', label: 'Post' },
+      { id: 'post', type: 'drop', label: 'Article' },
       { id: 'title', type: 'text', label: 'Title' },
       { id: 'description', type: 'textarea', label: 'Description' },
-      { id: 'read_time', type: 'number', label: 'Read Minutes', description: 'How long is the post in minutes' },
+      { id: 'read_time', type: 'number', label: 'Read Minutes', description: 'How long is the article in minutes' },
       {
         id: 'image',
         type: 'image',
@@ -211,7 +211,7 @@ const authorActions: Action[] = [
     changes: {
       post: (props, fields) => {
         const post = props['post'].find((post: any) => post.value === fields['post'])
-        if (!post) return { error: 'No post found' }
+        if (!post) return { error: 'No article found' }
         return {
           title: post.title,
           description: post.description,

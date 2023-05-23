@@ -3,7 +3,7 @@ import supabase from './client'
 export async function getAllLivePosts() {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time')
+    .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time')
     .eq('live', true)
     .order('created_at', { ascending: false })
   if (error) throw error
@@ -14,7 +14,7 @@ export async function getAllPosts() {
   const { data: posts, error } = await supabase
     .from('posts')
     .select(
-      'id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time, live'
+      'id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time, live'
     )
     .order('created_at', { ascending: false })
   if (error) throw error
@@ -24,7 +24,7 @@ export async function getAllPosts() {
 export async function getUserPosts(username: string) {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time')
+    .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time')
     .eq('live', true)
     .eq('author', username)
     .order('created_at', { ascending: false })
@@ -45,7 +45,7 @@ export async function getUserPostsWithContent(username: string) {
 export async function getPost(postId: string) {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('*, profiles ( username, first_name, last_name )')
+    .select('*, profiles ( username, first_name, last_name, picture )')
     .eq('id', postId)
   if (error) throw error
   return posts[0]
@@ -54,7 +54,7 @@ export async function getPost(postId: string) {
 export async function getPostShort(postId: string) {
   const { data: posts, error } = await supabase
     .from('posts')
-    .select('id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time')
+    .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time')
     .eq('id', postId)
   if (error) throw error
   return posts[0]
@@ -145,7 +145,7 @@ export async function getCategory(categoryId: string) {
     supabase.from('categories').select('*').eq('id', categoryId),
     supabase
       .from('posts')
-      .select('id, profiles ( username, first_name, last_name ), category, created_at, title, description, read_time')
+      .select('id, profiles ( username, first_name, last_name, picture ), category, created_at, title, description, read_time')
       .eq('live', true)
       .eq('category', categoryId)
       .order('created_at', { ascending: false }),

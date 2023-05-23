@@ -47,16 +47,9 @@ export default async function signup(req: NextApiRequest, res: NextApiResponse) 
   }
 
   try {
-    const { error } = await supabase.storage
-      .from('images')
-      .upload(`/profiles/${username}.jpg`, fs.readFileSync(path.join(process.cwd(), 'public/default.jpg')), {
-        upsert: true,
-        contentType: 'image/jpg',
-      })
-    if (error) throw error
     const {
       data: { user },
-      error: signError,
+      error,
     } = await supabase.auth.signUp({
       email,
       password,
@@ -68,10 +61,10 @@ export default async function signup(req: NextApiRequest, res: NextApiResponse) 
         },
       },
     })
-    if (signError) {
-      if (signError.message === 'duplicate key value violates unique constraint "profiles_pkey"')
+    if (error) {
+      if (error.message === 'duplicate key value violates unique constraint "profiles_pkey"')
         throw { message: 'Username already exists' }
-      throw signError
+      throw error
     }
     if (!user) {
       throw { message: 'No user created' }

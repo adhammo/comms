@@ -275,11 +275,12 @@
   position: fixed;
   padding: 0.5rem 0.5rem 0.5rem 1rem;
   border-radius: 0.25rem;
+  color: var(--light);
   background-color: var(--success);
   box-shadow: 0 0 10px -4px var(--foreground-variant);
   font-weight: 500;
   white-space: nowrap;
-  top: 4rem;
+  top: 6rem;
   left: 50%;
   transform: translate(-50%, 0);
   font-size: 0.85rem;
@@ -303,10 +304,7 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
-}
-
-.ignore {
-  filter: var(--foreground-filter);
+  filter: var(--light-filter);
 }
 
 @media (max-width: 600px) {

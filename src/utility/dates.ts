@@ -28,5 +28,5 @@ export const getDateString = (date: Date) => {
     default:
       suffix = 'th'
   }
-  return `${monthNames[date.getMonth()]} ${date.getDay()}${suffix}, ${date.getFullYear()}`
+  return `${monthNames[date.getMonth()]} ${date.getDate()}${suffix}, ${date.getFullYear()}`
 }
