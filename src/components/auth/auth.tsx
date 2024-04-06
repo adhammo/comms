@@ -13,7 +13,7 @@ export declare type SignProps = {
 const Signin = ({ setErrorMessage, setStatus }: SignProps) => {
   const router = useRouter()
   const supabase = useSupabaseClient()
-  const [email, setEmail] = useState('test')
+  const [email, setEmail] = useState('test@gmail.com')
   const [password, setPassword] = useState('test123')
 
   const submitForm = () => {
